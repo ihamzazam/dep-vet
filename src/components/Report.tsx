@@ -1,4 +1,6 @@
-import type { CSSProperties } from "react";
+"use client";
+
+import { useState, type CSSProperties } from "react";
 import type {
   ActionChip,
   FixCard,
@@ -9,6 +11,27 @@ import type {
   VulnFinding,
 } from "@/lib/types";
 import { RiskGlyph, PkgName } from "./glyphs";
+import { CopyButton } from "./CopyButton";
+import { advisoryUrl, npmUrl } from "@/lib/links";
+import { fixCommands, toMarkdown } from "@/lib/report-export";
+
+const SRC_LINK: CSSProperties = {
+  color: "inherit",
+  textDecoration: "none",
+  borderBottom: "1px dotted rgba(184,255,92,0.4)",
+};
+
+const TOOLBAR_BTN: CSSProperties = {
+  fontFamily: "var(--font-jetbrains), monospace",
+  fontSize: 11,
+  letterSpacing: "0.04em",
+  color: "#cfe6b0",
+  background: "rgba(184,255,92,0.06)",
+  border: "1px solid rgba(184,255,92,0.22)",
+  padding: "7px 12px",
+  borderRadius: 6,
+  cursor: "pointer",
+};
 
 const tint = (status: RiskStatus): string =>
   status === "critical"
@@ -31,7 +54,7 @@ const versionColor = (status: RiskStatus): string =>
 function ActionPill({ action, block }: { action: ActionChip; block?: boolean }) {
   const bg =
     action.style === "danger" ? "#ff5a48" : action.style === "warn" ? "#ffb020" : "#b8ff5c";
-  const common: CSSProperties = {
+  const base: CSSProperties = {
     fontFamily: action.mono ? "var(--font-jetbrains), monospace" : "var(--font-archivo), sans-serif",
     fontWeight: action.mono ? 600 : 700,
     fontSize: 12,
@@ -41,15 +64,26 @@ function ActionPill({ action, block }: { action: ActionChip; block?: boolean }) 
     background: bg,
     padding: block ? "8px 12px" : "9px 16px",
     borderRadius: 6,
+    border: "none",
   };
-  if (block) {
-    return <div style={{ ...common, textAlign: "center" }}>{action.label}</div>;
+  const style: CSSProperties = block
+    ? { ...base, display: "block", width: "100%", textAlign: "center" }
+    : { ...base, display: "inline-flex", alignItems: "center", gap: 8 };
+
+  // Commands are copyable; non-command verbs render as a static pill.
+  if (action.command) {
+    return (
+      <CopyButton
+        text={action.command}
+        title="Copy command"
+        copiedLabel="copied ✓"
+        style={{ ...style, cursor: "pointer" }}
+      >
+        {action.label}
+      </CopyButton>
+    );
   }
-  return (
-    <div style={{ ...common, display: "inline-flex", alignItems: "center", gap: 8 }}>
-      {action.label}
-    </div>
-  );
+  return <div style={style}>{action.label}</div>;
 }
 
 function StatTile({ stat }: { stat: PackageStat }) {
@@ -109,7 +143,15 @@ function VulnLine({ vuln }: { vuln: VulnFinding }) {
   return (
     <div style={{ borderLeft: `2px solid ${accent}`, paddingLeft: 12, marginBottom: 14 }}>
       <div style={{ fontSize: 12, color: idColor }}>
-        {vuln.id} ·{" "}
+        <a
+          href={advisoryUrl(vuln.id)}
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ ...SRC_LINK, color: idColor }}
+        >
+          {vuln.id} ↗
+        </a>{" "}
+        ·{" "}
         <span style={{ color: sevColor }}>
           {vuln.severityLabel}
           {vuln.score != null ? ` (${vuln.score})` : ""}
@@ -226,7 +268,23 @@ function PackageRow({ pkg, defaultOpen }: { pkg: PackageFinding; defaultOpen?: b
           </div>
         )}
         <StatTile stat={pkg.stats} />
-        {pkg.action && <ActionPill action={pkg.action} />}
+        <div style={{ display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap" }}>
+          {pkg.action && <ActionPill action={pkg.action} />}
+          <a
+            href={npmUrl(pkg.name)}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              fontSize: 10,
+              letterSpacing: "0.12em",
+              textTransform: "uppercase",
+              color: "#6f8a4a",
+              textDecoration: "none",
+            }}
+          >
+            view on npm ↗
+          </a>
+        </div>
       </div>
     </details>
   );
@@ -290,9 +348,22 @@ function FixCardView({ fix }: { fix: FixCard }) {
           {fix.status.toUpperCase()} · {fix.rank}
         </span>
       </div>
-      <div style={{ fontSize: 14, color: nameColor(fix.status), fontWeight: 600, marginBottom: 6 }}>
+      <a
+        href={npmUrl(fix.name)}
+        target="_blank"
+        rel="noopener noreferrer"
+        title="View on npm"
+        style={{
+          display: "block",
+          fontSize: 14,
+          color: nameColor(fix.status),
+          fontWeight: 600,
+          marginBottom: 6,
+          textDecoration: "none",
+        }}
+      >
         <PkgName name={fix.name} version={fix.version} versionColor={versionColor(fix.status)} />
-      </div>
+      </a>
       <div style={{ fontSize: 11.5, color: "#c79a92", lineHeight: 1.5, marginBottom: 12 }}>
         {fix.reason}
       </div>
@@ -303,7 +374,15 @@ function FixCardView({ fix }: { fix: FixCard }) {
 
 /* ----------------------------- top level ----------------------------- */
 
-export function Report({ report, onReset }: { report: ScanReport; onReset: () => void }) {
+export function Report({
+  report,
+  onReset,
+  shareUrl,
+}: {
+  report: ScanReport;
+  onReset: () => void;
+  shareUrl: string | null;
+}) {
   return (
     <div
       style={{
@@ -315,16 +394,54 @@ export function Report({ report, onReset }: { report: ScanReport; onReset: () =>
       }}
     >
       {report.mode === "mixed" ? (
-        <MixedReport report={report} onReset={onReset} />
+        <MixedReport report={report} onReset={onReset} shareUrl={shareUrl} />
       ) : (
-        <HealthyReport report={report} onReset={onReset} />
+        <HealthyReport report={report} onReset={onReset} shareUrl={shareUrl} />
       )}
     </div>
   );
 }
 
-function MixedReport({ report, onReset }: { report: ScanReport; onReset: () => void }) {
+/** Copy fixes / copy markdown / copy share-link toolbar. */
+function ExportToolbar({
+  report,
+  shareUrl,
+}: {
+  report: ScanReport;
+  shareUrl: string | null;
+}) {
+  const cmds = fixCommands(report);
+  return (
+    <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 18 }}>
+      {cmds && (
+        <CopyButton text={cmds} style={TOOLBAR_BTN} copiedLabel="✓ fixes copied">
+          ⧉ Copy fixes
+        </CopyButton>
+      )}
+      <CopyButton text={toMarkdown(report)} style={TOOLBAR_BTN} copiedLabel="✓ report copied">
+        ⧉ Copy as Markdown
+      </CopyButton>
+      {shareUrl && (
+        <CopyButton text={shareUrl} style={TOOLBAR_BTN} copiedLabel="✓ link copied">
+          ⧉ Copy share link
+        </CopyButton>
+      )}
+    </div>
+  );
+}
+
+function MixedReport({
+  report,
+  onReset,
+  shareUrl,
+}: {
+  report: ScanReport;
+  onReset: () => void;
+  shareUrl: string | null;
+}) {
   const firstRiskyIndex = report.packages.findIndex((p) => p.status !== "healthy");
+  const [showAll, setShowAll] = useState(false);
+  const more = report.morePackages ?? [];
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
       {/* verdict bar */}
@@ -415,10 +532,24 @@ function MixedReport({ report, onReset }: { report: ScanReport; onReset: () => v
             ⚑ CAUGHT
           </span>
           <span style={{ fontSize: 13, color: "#ffd2cb" }}>
-            <span style={{ color: "#fff", fontWeight: 600 }}>
+            <a
+              href={npmUrl(report.caught.name)}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ ...SRC_LINK, color: "#fff", fontWeight: 600 }}
+            >
               {report.caught.name}@{report.caught.version}
-            </span>{" "}
-            is a typosquat of <span style={{ color: "#fff" }}>{report.caught.target}</span> — and
+            </a>{" "}
+            is a typosquat of{" "}
+            <a
+              href={npmUrl(report.caught.target)}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ ...SRC_LINK, color: "#fff" }}
+            >
+              {report.caught.target}
+            </a>{" "}
+            — and
             ships a hidden <span style={{ color: "#ff8a7d" }}>{report.caught.hook}</span> script. It
             would have run the moment you typed <span style={{ color: "#cfe6b0" }}>npm install</span>.
           </span>
@@ -448,6 +579,7 @@ function MixedReport({ report, onReset }: { report: ScanReport; onReset: () => v
           className="dv-report-right"
           style={{ overflowY: "auto", padding: "24px 28px", minWidth: 0 }}
         >
+          <ExportToolbar report={report} shareUrl={shareUrl} />
           {report.fixes.length > 0 && (
             <>
               <div
@@ -509,6 +641,7 @@ function MixedReport({ report, onReset }: { report: ScanReport; onReset: () => v
             {report.packages.map((pkg, i) => (
               <PackageRow key={pkg.name} pkg={pkg} defaultOpen={i === firstRiskyIndex} />
             ))}
+            {showAll && more.map((pkg) => <PackageRow key={pkg.name} pkg={pkg} />)}
             {report.hiddenHealthy > 0 && (
               <div
                 style={{
@@ -530,6 +663,25 @@ function MixedReport({ report, onReset }: { report: ScanReport; onReset: () => v
                   }}
                 />
                 + {report.hiddenHealthy} more packages — all healthy, no advisories
+                {more.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => setShowAll((v) => !v)}
+                    style={{
+                      marginLeft: "auto",
+                      color: "#4a5a38",
+                      cursor: "pointer",
+                      background: "transparent",
+                      border: "none",
+                      borderBottom: "1px dashed rgba(184,255,92,0.3)",
+                      fontFamily: "inherit",
+                      fontSize: 12,
+                      padding: 0,
+                    }}
+                  >
+                    {showAll ? "hide" : "show all"}
+                  </button>
+                )}
               </div>
             )}
           </div>
@@ -682,7 +834,15 @@ function ReportScope({
   );
 }
 
-function HealthyReport({ report, onReset }: { report: ScanReport; onReset: () => void }) {
+function HealthyReport({
+  report,
+  onReset,
+  shareUrl,
+}: {
+  report: ScanReport;
+  onReset: () => void;
+  shareUrl: string | null;
+}) {
   const summary = report.healthySummary ?? [];
   const metrics = [
     { value: "0", label: "KNOWN VULNERABILITIES" },
@@ -892,6 +1052,7 @@ function HealthyReport({ report, onReset }: { report: ScanReport; onReset: () =>
             Every dependency checks out against live advisories. No known CVEs, no abandoned
             packages, no typosquats, no install-time scripts. This manifest is safe to install.
           </p>
+          <ExportToolbar report={report} shareUrl={shareUrl} />
           <div
             style={{
               display: "grid",

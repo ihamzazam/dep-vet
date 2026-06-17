@@ -138,7 +138,11 @@ export function scorePackage(
   let action: ActionChip;
   let fixReason: string;
   if (isTyposquat || securityDeprecation) {
-    action = { label: "Remove from dependencies", style: "danger" };
+    action = {
+      label: "Remove from dependencies",
+      style: "danger",
+      command: `npm uninstall ${dep.name}`,
+    };
     fixReason = isTyposquat
       ? "Typosquat — not a dependency you chose."
       : "Deprecated for security reasons.";
@@ -147,6 +151,7 @@ export function scorePackage(
       label: `npm i ${dep.name}@${fixedVersion}`,
       style: status === "critical" ? "safe" : "warn",
       mono: true,
+      command: `npm i ${dep.name}@${fixedVersion}`,
     };
     fixReason = worstVuln
       ? `${worstVuln.id} (${worstVuln.severityLabel}). Patched in ${fixedVersion}.`
@@ -156,6 +161,7 @@ export function scorePackage(
       label: `npm i ${dep.name}@${npm.latest}`,
       style: status === "critical" ? "safe" : "warn",
       mono: true,
+      command: `npm i ${dep.name}@${npm.latest}`,
     };
     fixReason = abandoned
       ? "Unmaintained — update or replace."

@@ -24,6 +24,8 @@ export interface ActionChip {
   style: ActionStyle;
   /** Render in mono (commands / versions) vs Archivo display (verbs). */
   mono?: boolean;
+  /** Copy-paste shell command, e.g. "npm i lodash@4.17.21" or "npm uninstall colorz". */
+  command?: string;
 }
 
 export interface VulnFinding {
@@ -83,8 +85,10 @@ export interface ScanReport {
   counts: { critical: number; warning: number; healthy: number };
   caught?: CaughtBanner | null;
   fixes: FixCard[];
-  /** Risky packages first, then a sample of healthy ones. */
+  /** Risky packages first, then a sample of healthy ones (default-visible). */
   packages: PackageFinding[];
+  /** The remaining healthy packages, revealed by "show all" (real scans only). */
+  morePackages?: PackageFinding[];
   /** Count of healthy packages collapsed under the "+ N more" row. */
   hiddenHealthy: number;
   /** For the all-clear state: a few "name@version" strings to show as ✓ chips. */

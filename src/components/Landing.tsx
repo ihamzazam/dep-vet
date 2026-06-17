@@ -95,6 +95,12 @@ export function Landing({
         </p>
 
         <div
+          onDragOver={(e) => e.preventDefault()}
+          onDrop={(e) => {
+            e.preventDefault();
+            const file = e.dataTransfer?.files?.[0];
+            if (file) file.text().then((t) => onInput(t)).catch(() => {});
+          }}
           style={{
             position: "relative",
             background: "rgba(10,16,8,0.7)",
@@ -117,12 +123,19 @@ export function Landing({
               ▸ package.json
             </span>
             <span style={{ marginLeft: "auto", fontSize: 10, color: "#4a5a38" }}>
-              paste · or pick a target below
+              paste · drop a file · ⌘↵ to scan
             </span>
           </div>
           <textarea
             value={input}
             onChange={(e) => onInput(e.target.value)}
+            onKeyDown={(e) => {
+              if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
+                e.preventDefault();
+                onScan();
+              }
+            }}
+            autoFocus
             placeholder={'{ "dependencies": { "react": "^18.2.0", ... } }'}
             spellCheck={false}
             aria-label="package.json input"

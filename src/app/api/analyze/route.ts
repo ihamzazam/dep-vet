@@ -1,4 +1,6 @@
 import { analyzeManifest } from "@/lib/analyze";
+import { getCachedReport, setCachedReport, manifestKey } from "@/lib/cache";
+import { rateLimit, clientIp } from "@/lib/ratelimit";
 import type { AnalyzeResponse } from "@/lib/types";
 
 export const runtime = "nodejs";
@@ -8,6 +10,18 @@ export const maxDuration = 30;
 const OVERALL_TIMEOUT_MS = 25_000;
 
 export async function POST(request: Request) {
+  // 1. per-IP throttle (no-signup tools are abuse magnets)
+  const limit = rateLimit(clientIp(request));
+  if (!limit.ok) {
+    return Response.json(
+      {
+        error:
+          "RATE LIMITED — too many scans from your network. Wait a few seconds and try again.",
+      },
+      { status: 429, headers: { "retry-after": String(limit.retryAfterSec) } },
+    );
+  }
+
   let body: unknown;
   try {
     body = await request.json();
@@ -23,6 +37,17 @@ export async function POST(request: Request) {
       ? String((body as { manifest: unknown }).manifest ?? "")
       : "";
 
+  // 2. cache: identical manifests (the demo, judges, retries) return instantly
+  const key = manifestKey(manifest);
+  const cached = getCachedReport(key);
+  if (cached) {
+    const payload: AnalyzeResponse = { report: cached, elapsedMs: 0 };
+    return Response.json(payload, {
+      status: 200,
+      headers: { "x-depvet-cache": "hit" },
+    });
+  }
+
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), OVERALL_TIMEOUT_MS);
   const started = Date.now();
@@ -31,11 +56,15 @@ export async function POST(request: Request) {
     if (!outcome.ok) {
       return Response.json({ error: outcome.error }, { status: 400 });
     }
+    setCachedReport(key, outcome.report);
     const payload: AnalyzeResponse = {
       report: outcome.report,
       elapsedMs: Date.now() - started,
     };
-    return Response.json(payload, { status: 200 });
+    return Response.json(payload, {
+      status: 200,
+      headers: { "x-depvet-cache": "miss" },
+    });
   } catch (e) {
     const aborted = e instanceof Error && e.name === "AbortError";
     return Response.json(

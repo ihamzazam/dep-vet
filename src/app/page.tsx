@@ -13,6 +13,7 @@ import {
   EXAMPLE_BROKEN,
 } from "@/lib/demo";
 import { parseManifest } from "@/lib/parse";
+import { encodeManifest, decodeManifest } from "@/lib/share";
 import type { AnalyzeResponse, ScanReport } from "@/lib/types";
 
 type Screen = "landing" | "analyzing" | "report";
@@ -151,6 +152,45 @@ export default function Home() {
     [startScan],
   );
 
+  // Open a shared link: #ex=<example> replays the demo; #s=<manifest> re-scans.
+  const initialized = useRef(false);
+  useEffect(() => {
+    if (initialized.current) return;
+    initialized.current = true;
+    const h = typeof window !== "undefined" ? window.location.hash : "";
+    if (!h) return;
+    // Defer out of the effect body so the kickoff isn't a synchronous setState.
+    const t = setTimeout(() => {
+      if (h.startsWith("#ex=")) {
+        const k = h.slice(4);
+        if (k === "real") loadExample("real", EXAMPLE_REAL);
+        else if (k === "clean") loadExample("clean", EXAMPLE_CLEAN);
+        else if (k === "broken") loadExample("broken", EXAMPLE_BROKEN);
+      } else if (h.startsWith("#s=")) {
+        const m = decodeManifest(h.slice(3));
+        if (m) {
+          setInputState(m);
+          setSource("custom");
+          void startScan("custom", m);
+        }
+      }
+    }, 0);
+    return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Build the shareable link for the current report (window exists post-interaction).
+  let shareUrl: string | null = null;
+  if (screen === "report" && typeof window !== "undefined") {
+    const base = `${window.location.origin}${window.location.pathname}`;
+    if (source === "real" || source === "clean") {
+      shareUrl = `${base}#ex=${source}`;
+    } else {
+      const enc = encodeManifest(input);
+      shareUrl = enc ? `${base}#s=${enc}` : null;
+    }
+  }
+
   return (
     <div
       style={{
@@ -187,7 +227,9 @@ export default function Home() {
         />
       )}
 
-      {screen === "report" && report && <Report report={report} onReset={reset} />}
+      {screen === "report" && report && (
+        <Report report={report} onReset={reset} shareUrl={shareUrl} />
+      )}
     </div>
   );
 }

@@ -62,7 +62,7 @@ export const DEMO_MIXED: ScanReport = {
       name: "colorz",
       version: "1.4.0",
       reason: "Typosquat + malicious postinstall. Not a dependency you chose.",
-      action: { label: "Remove now", style: "danger" },
+      action: { label: "Remove now", style: "danger", command: "npm uninstall colorz" },
     },
     {
       rank: "02",
@@ -70,7 +70,7 @@ export const DEMO_MIXED: ScanReport = {
       name: "lodash",
       version: "4.17.11",
       reason: "Prototype pollution, CVE-2019-10744. Patched upstream.",
-      action: { label: "↑ upgrade → 4.17.21", style: "safe", mono: true },
+      action: { label: "↑ upgrade → 4.17.21", style: "safe", mono: true, command: "npm i lodash@4.17.21" },
     },
     {
       rank: "03",
@@ -78,7 +78,7 @@ export const DEMO_MIXED: ScanReport = {
       name: "minimist",
       version: "1.2.0",
       reason: "Argument injection, CVE-2021-44906. Low-effort fix.",
-      action: { label: "↑ upgrade → 1.2.8", style: "safe", mono: true },
+      action: { label: "↑ upgrade → 1.2.8", style: "safe", mono: true, command: "npm i minimist@1.2.8" },
     },
   ],
   packages: [
@@ -100,7 +100,7 @@ export const DEMO_MIXED: ScanReport = {
         installScript: "⚑ postinstall",
         installScriptRisk: true,
       },
-      action: { label: "Remove from dependencies", style: "danger" },
+      action: { label: "Remove from dependencies", style: "danger", command: "npm uninstall colorz" },
     },
     {
       name: "lodash",
@@ -126,7 +126,7 @@ export const DEMO_MIXED: ScanReport = {
         installScript: "none",
         installScriptRisk: false,
       },
-      action: { label: "npm i lodash@4.17.21", style: "safe", mono: true },
+      action: { label: "npm i lodash@4.17.21", style: "safe", mono: true, command: "npm i lodash@4.17.21" },
     },
     {
       name: "minimist",
@@ -151,7 +151,7 @@ export const DEMO_MIXED: ScanReport = {
         installScript: "none",
         installScriptRisk: false,
       },
-      action: { label: "npm i minimist@1.2.8", style: "safe", mono: true },
+      action: { label: "npm i minimist@1.2.8", style: "safe", mono: true, command: "npm i minimist@1.2.8" },
     },
     {
       name: "axios",
@@ -177,7 +177,7 @@ export const DEMO_MIXED: ScanReport = {
         installScript: "none",
         installScriptRisk: false,
       },
-      action: { label: "npm i axios@^1.6.7", style: "warn", mono: true },
+      action: { label: "npm i axios@^1.6.7", style: "warn", mono: true, command: "npm i axios@^1.6.7" },
     },
     {
       name: "moment",

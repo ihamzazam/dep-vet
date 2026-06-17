@@ -102,6 +102,7 @@ export async function analyzeManifest(
     const note = enrichment?.notes.get(p.name);
     return note ? { ...finding, aiNote: note } : finding;
   });
+  const morePackages = healthy.slice(HEALTHY_ROWS_SHOWN).map(stripInternal);
 
   // caught banner: the typosquat-with-install-script hero moment
   let caught: CaughtBanner | null = null;
@@ -137,6 +138,7 @@ export async function analyzeManifest(
     caught,
     fixes,
     packages,
+    morePackages: morePackages.length ? morePackages : undefined,
     hiddenHealthy,
     healthySummary,
     warnings: warnings.length ? warnings : undefined,
