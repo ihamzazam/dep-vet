@@ -214,6 +214,20 @@ export function Landing({
             broken manifest
           </button>
         </div>
+
+        <p
+          style={{
+            marginTop: 22,
+            maxWidth: 460,
+            fontSize: 10.5,
+            lineHeight: 1.6,
+            letterSpacing: "0.02em",
+            color: "#4a5a38",
+          }}
+        >
+          Results are based on public data (OSV · npm registry) and are not a
+          substitute for a full security audit.
+        </p>
       </div>
 
       {/* ambient radar */}
