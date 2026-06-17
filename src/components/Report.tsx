@@ -198,6 +198,33 @@ function PackageRow({ pkg, defaultOpen }: { pkg: PackageFinding; defaultOpen?: b
         {pkg.vulns.map((v) => (
           <VulnLine key={v.id} vuln={v} />
         ))}
+        {pkg.aiNote && (
+          <div style={{ marginBottom: 14 }}>
+            <div
+              style={{
+                fontSize: 9,
+                letterSpacing: "0.18em",
+                color: "#6f8a4a",
+                textTransform: "uppercase",
+                marginBottom: 6,
+              }}
+            >
+              ▸ in plain english
+            </div>
+            <div
+              style={{
+                fontSize: 12,
+                color: "#c8dab0",
+                lineHeight: 1.6,
+                maxWidth: 680,
+                borderLeft: "2px solid rgba(184,255,92,0.35)",
+                paddingLeft: 12,
+              }}
+            >
+              {pkg.aiNote}
+            </div>
+          </div>
+        )}
         <StatTile stat={pkg.stats} />
         {pkg.action && <ActionPill action={pkg.action} />}
       </div>

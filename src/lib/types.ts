@@ -54,6 +54,8 @@ export interface PackageFinding {
   vulns: VulnFinding[];
   stats: PackageStat;
   action?: ActionChip;
+  /** AI-synthesized plain-English explanation (Day 2). Absent if AI is off/failed. */
+  aiNote?: string;
 }
 
 export interface FixCard {

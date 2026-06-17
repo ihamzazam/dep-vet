@@ -12,6 +12,7 @@ import { fetchNpmPackage, type NpmPackageData } from "./npm";
 import { queryOsv } from "./osv";
 import { detectTyposquat } from "./typosquat";
 import { scorePackage, type ScoredPackage } from "./score";
+import { enrichFlagged } from "./ai";
 import { mapLimit } from "./http";
 import type { OsvVuln } from "./osv";
 import type { CaughtBanner, FixCard, PackageFinding, ScanReport } from "./types";
@@ -91,7 +92,16 @@ export async function analyzeManifest(
   const shownHealthy = healthy.slice(0, HEALTHY_ROWS_SHOWN);
   const hiddenHealthy = Math.max(0, healthy.length - shownHealthy.length);
 
-  const packages = [...risky, ...shownHealthy].map(stripInternal);
+  // AI synthesis layer — explains/prioritizes the deterministic findings.
+  // Only invoked when there's something flagged (a clean manifest never calls
+  // the model, so it can't manufacture risk). Fails open to null.
+  const enrichment = await enrichFlagged(risky, signal);
+
+  const packages = [...risky, ...shownHealthy].map((p) => {
+    const finding = stripInternal(p);
+    const note = enrichment?.notes.get(p.name);
+    return note ? { ...finding, aiNote: note } : finding;
+  });
 
   // caught banner: the typosquat-with-install-script hero moment
   let caught: CaughtBanner | null = null;
@@ -111,7 +121,8 @@ export async function analyzeManifest(
     status: p.status,
     name: p.name,
     version: p.version,
-    reason: p.fixReason,
+    // Prefer the AI's plain-English reason; fall back to the deterministic one.
+    reason: enrichment?.priorities.get(p.name) ?? p.fixReason,
     action: p.fixAction,
   }));
 

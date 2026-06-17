@@ -49,8 +49,11 @@ npm run build    # production build
 npm run lint     # eslint
 ```
 
-Next 16 (App Router) · React 19 · TypeScript · Tailwind v4. No env vars needed
-for the MVP (all data sources are free + keyless).
+Next 16 (App Router) · React 19 · TypeScript · Tailwind v4. The detection
+sources are free + keyless. The **AI explanation layer** is optional: set
+`ANTHROPIC_API_KEY` (see `.env.example`) to add plain-English prioritization on
+top of the real findings. Without it, DepVet renders the deterministic report
+unchanged — it never blocks on the AI.
 
 ## Deploy + Novus (hackathon gate)
 
@@ -64,10 +67,12 @@ for the MVP (all data sources are free + keyless).
 
 ## Status
 
-Day 1 complete: scaffold + full design (landing / scan reveal / report-mixed /
-all-clear / error) + real `/api/analyze`. Day 2: AI prioritization/explanation
-layer (Anthropic, `claude-sonnet-4-6`, structured JSON), richer typosquat list,
-loading polish. See `docs/DepVet-Claude-Code-Handoff.md`.
+Day 1 + Day 2 complete: scaffold + full design (landing / scan reveal /
+report-mixed / all-clear / error), real `/api/analyze`, and the **AI synthesis
+layer** (Anthropic `claude-sonnet-4-6`, forced structured JSON, synthesis-only,
+fails open). The AI fills the "Neutralize first" reasons and the per-package
+"in plain english" block; the CVE IDs, CVSS scores, and stats above it stay
+deterministic — real data, AI only explains. See `docs/DepVet-Claude-Code-Handoff.md`.
 
 > Results are based on public data (OSV, npm registry) and are not a substitute
 > for a full security audit.

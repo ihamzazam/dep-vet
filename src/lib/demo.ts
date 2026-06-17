@@ -88,6 +88,8 @@ export const DEMO_MIXED: ScanReport = {
       status: "critical",
       tags: ["TYPOSQUAT · INSTALL-SCRIPT"],
       summaryRight: "3.4k/wk · 1 maintainer",
+      aiNote:
+        "This isn't a package you meant to install — it's a near-copy of colors, and its postinstall hook runs attacker-controlled code the instant you install. Remove it.",
       description:
         "Published 6 days ago, name is one edit-distance from colors (220M downloads/wk). Ships a postinstall hook that fetches and executes a remote script. This is an active supply-chain attack.",
       vulns: [],
@@ -106,6 +108,8 @@ export const DEMO_MIXED: ScanReport = {
       status: "critical",
       tags: ["1 HIGH CVE"],
       summaryRight: "48M/wk · 2 maintainers",
+      aiNote:
+        "A known prototype-pollution flaw (CVE-2019-10744) that's already fixed upstream — bumping to 4.17.21 clears it with no API changes.",
       vulns: [
         {
           id: "CVE-2019-10744",
@@ -130,6 +134,8 @@ export const DEMO_MIXED: ScanReport = {
       status: "critical",
       tags: ["1 CVE"],
       summaryRight: "61M/wk · 1 maintainer",
+      aiNote:
+        "Argument injection via crafted keys (CVE-2021-44906); the 1.2.8 patch is a drop-in fix with no breaking changes.",
       vulns: [
         {
           id: "CVE-2021-44906",
@@ -153,6 +159,8 @@ export const DEMO_MIXED: ScanReport = {
       status: "warning",
       tags: ["OUTDATED · 1 MODERATE"],
       summaryRight: "38M/wk · 5 maintainers",
+      aiNote:
+        "This 0.21.1 has a moderate SSRF (CVE-2020-28168) fixed years ago — moving to a current 1.x removes it along with a lot of accrued risk.",
       vulns: [
         {
           id: "CVE-2020-28168",
@@ -177,6 +185,8 @@ export const DEMO_MIXED: ScanReport = {
       status: "warning",
       tags: ["UNMAINTAINED"],
       summaryRight: "12M/wk · legacy",
+      aiNote:
+        "Still works, but it's in maintenance mode and ships ~290KB; for new code dayjs is a lighter, actively-maintained drop-in.",
       description:
         "Project is in maintenance mode; the authors recommend modern alternatives. No active CVEs, but it adds ~290KB and won't receive fixes.",
       vulns: [],
