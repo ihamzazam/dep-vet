@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Archivo:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: #070a05; }
+  ::selection { background: rgba(184,255,92,0.28); }
+  ::-webkit-scrollbar { width: 9px; height: 9px; }
+  ::-webkit-scrollbar-thumb { background: rgba(184,255,92,0.18); border-radius: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  details > summary { list-style: none; cursor: pointer; }
+  details > summary::-webkit-details-marker { display: none; }
+  @keyframes dv-sweep { to { transform: rotate(360deg); } }
+  @keyframes dv-scanline { 0% { top:-2%; opacity:0; } 8% { opacity:1; } 92% { opacity:1; } 100% { top:100%; opacity:0; } }
+  @keyframes dv-pulse { 0%,100% { opacity:.4; } 50% { opacity:1; } }
+  @keyframes dv-flicker { 0%,100% { opacity:.4; } 48% { opacity:.9; } 50% { opacity:.15; } 52% { opacity:.9; } }
+  @keyframes dv-blip { 0% { transform:scale(.2); opacity:0; } 60% { opacity:1; } 100% { transform:scale(1); opacity:1; } }
+  @keyframes dv-ignite { 0% { transform:scale(0); opacity:0; } 55% { transform:scale(1.7); opacity:1; } 100% { transform:scale(1); opacity:1; } }
+  @keyframes dv-rise { from { transform:translateY(14px); opacity:0; } to { transform:translateY(0); opacity:1; } }
+  @keyframes dv-bar { from { transform:scaleX(0); } to { transform:scaleX(1); } }
+  @keyframes dv-dash { to { stroke-dashoffset: -1000; } }
+  .dv-row { transition: background .15s; }
+  .dv-row:hover > summary { background: rgba(184,255,92,0.05); }
+  details[open] > summary { background: rgba(184,255,92,0.06); }
+  details[open] .dv-chev { transform: rotate(90deg); }
+  .dv-chev { transition: transform .2s ease; }
+  @media (max-width: 1040px){
+    .dv-report-body { grid-template-columns: 1fr !important; }
+    .dv-scope-col { display: none !important; }
+    .dv-verdict { flex-wrap: wrap !important; row-gap: 14px !important; }
+    .dv-verdict-stats { margin-left: 0 !important; width: 100% !important; justify-content: flex-start !important; }
+  }
+  @media (max-width: 900px){
+    .dv-landing { grid-template-columns: 1fr !important; }
+    .dv-landing-radar { height: 340px !important; min-height: 340px !important; order: -1; }
+    .dv-landing-copy { max-width: none !important; padding: 44px 32px 32px !important; }
+  }
+  @media (max-width: 600px){
+    .dv-h1 { font-size: 40px !important; }
+    .dv-landing-copy { padding: 32px 22px 24px !important; }
+    .dv-verdict { padding: 16px 20px !important; }
+    .dv-report-right { padding: 18px 18px !important; }
+  }
+</style>
+</helmet>
+<div style="position:relative; min-height:100vh; background:#080c06; color:#eef5e4; font-family:'JetBrains Mono', monospace; overflow:hidden;">
+
+  <!-- ambient grid + vignette -->
+  <div style="position:fixed; inset:0; pointer-events:none; background-image:linear-gradient(rgba(184,255,92,0.038) 1px, transparent 1px), linear-gradient(90deg, rgba(184,255,92,0.038) 1px, transparent 1px); background-size:42px 42px;"></div>
+  <div style="position:fixed; inset:0; pointer-events:none; background:radial-gradient(120% 90% at 80% 10%, rgba(184,255,92,0.05), transparent 50%), radial-gradient(100% 100% at 50% 120%, rgba(0,0,0,0.55), transparent 60%);"></div>
+
+  <!-- top bar -->
+  <div style="position:relative; z-index:5; display:flex; align-items:center; gap:14px; padding:18px 30px; border-bottom:1px solid rgba(184,255,92,0.1);">
+    <svg width="22" height="22" viewBox="0 0 22 22"><rect x="2.5" y="2.5" width="17" height="17" rx="2.5" fill="none" stroke="#b8ff5c" stroke-width="1.6"/><line x1="11" y1="2.5" x2="11" y2="19.5" stroke="#b8ff5c" stroke-width="1.6"/><line x1="2.5" y1="11" x2="19.5" y2="11" stroke="#b8ff5c" stroke-width="1.6"/><circle cx="11" cy="11" r="2.4" fill="#b8ff5c"/></svg>
+    <span style="font-family:'Archivo',sans-serif; font-weight:800; font-size:18px; letter-spacing:0.05em; text-transform:uppercase;">Dep<span style="color:#b8ff5c;">Vet</span></span>
+    <span style="font-family:'JetBrains Mono',monospace; font-size:10px; color:#6f8a4a; letter-spacing:0.16em; margin-left:6px; white-space:nowrap;">SUPPLY-CHAIN SCANNER</span>
+    <div style="margin-left:auto; display:flex; align-items:center; gap:18px;">
+      <span style="display:flex; align-items:center; gap:7px; font-size:10px; letter-spacing:0.14em; color:#6f8a4a;"><span style="width:7px; height:7px; border-radius:50%; background:#b8ff5c; box-shadow:0 0 8px #b8ff5c; animation:dv-pulse 2s infinite;"></span>SCANNER ONLINE</span>
+      <span style="font-size:10px; letter-spacing:0.14em; color:#4a5a38; white-space:nowrap;">v0.9 · NO DATA LEAVES BROWSER</span>
+    </div>
+  </div>
+
+  <!-- ===================== LANDING ===================== -->
+  <sc-if value="{{ isLanding }}" hint-placeholder-val="{{ true }}">
+  <div class="dv-landing" style="position:relative; z-index:2; display:grid; grid-template-columns:1fr 1fr; min-height:calc(100vh - 61px);">
+    <!-- copy + paste -->
+    <div class="dv-landing-copy" style="padding:64px 60px; display:flex; flex-direction:column; justify-content:center; max-width:640px;">
+      <div style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.24em; color:#ffb020; text-transform:uppercase; margin-bottom:20px;">[ supply-chain recon ]</div>
+      <h1 class="dv-h1" style="font-family:'Archivo',sans-serif; font-weight:900; font-size:clamp(40px,4.4vw,56px); line-height:0.95; margin:0 0 20px; letter-spacing:-0.03em; text-transform:uppercase; text-wrap:balance;">Audit before<br>you install.</h1>
+      <p style="font-size:14px; line-height:1.65; color:#93a883; margin:0 0 28px; max-width:440px;">Paste your <span style="color:#cfe6b0;">package.json</span>. Every dependency is cross-checked against live vulnerability data, abandonment, typosquats, and malicious install-scripts — then plotted on the scope. One verdict, a prioritized fix list. Nothing leaves your browser.</p>
+
+      <div style="position:relative; background:rgba(10,16,8,0.7); border:1px solid rgba(184,255,92,0.22); border-radius:9px; overflow:hidden;">
+        <div style="display:flex; align-items:center; gap:8px; padding:9px 13px; border-bottom:1px solid rgba(184,255,92,0.12); background:rgba(184,255,92,0.03);">
+          <span style="font-size:10px; letter-spacing:0.16em; color:#6f8a4a;">▸ package.json</span>
+          <span style="margin-left:auto; font-size:10px; color:#4a5a38;">paste · or pick a target below</span>
+        </div>
+        <textarea value="{{ input }}" onInput="{{ onInput }}" placeholder='{ "dependencies": { "react": "^18.2.0", ... } }' spellcheck="false" style="width:100%; height:150px; resize:none; border:none; outline:none; background:transparent; color:#cfe6b0; font-family:'JetBrains Mono',monospace; font-size:13px; line-height:1.6; padding:14px; caret-color:#b8ff5c;"></textarea>
+      </div>
+
+      <!-- error readout -->
+      <sc-if value="{{ hasError }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex; align-items:flex-start; gap:10px; margin-top:12px; padding:11px 14px; border:1px solid rgba(255,69,48,0.4); background:rgba(255,69,48,0.08); border-radius:7px;">
+          <svg width="16" height="16" viewBox="0 0 16 16" style="flex-shrink:0; margin-top:1px;"><polygon points="8,1.5 15,14 1,14" fill="none" stroke="#ff5a48" stroke-width="1.6" stroke-linejoin="round"/><rect x="7.2" y="6" width="1.6" height="4.5" fill="#ff5a48"/><rect x="7.2" y="11.3" width="1.6" height="1.6" fill="#ff5a48"/></svg>
+          <div style="font-size:12px; color:#ffb1a8; line-height:1.5;">{{ error }}</div>
+        </div>
+      </sc-if>
+
+      <!-- examples + cta -->
+      <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-top:18px;">
+        <button onClick="{{ runScan }}" style="font-family:'Archivo',sans-serif; font-weight:700; font-size:14px; letter-spacing:0.04em; text-transform:uppercase; color:#0a0c07; background:#b8ff5c; border:none; padding:13px 26px; border-radius:7px; cursor:pointer; box-shadow:0 0 34px -6px rgba(184,255,92,0.6);">Initiate scan →</button>
+        <span style="font-size:10px; color:#4a5a38; letter-spacing:0.14em; margin:0 4px;">TRY:</span>
+        <button onClick="{{ loadReal }}" style="font-family:'JetBrains Mono',monospace; font-size:12px; color:#cfe6b0; background:transparent; border:1px solid rgba(184,255,92,0.3); padding:9px 13px; border-radius:6px; cursor:pointer;">real-world app</button>
+        <button onClick="{{ loadClean }}" style="font-family:'JetBrains Mono',monospace; font-size:12px; color:#cfe6b0; background:transparent; border:1px solid rgba(184,255,92,0.3); padding:9px 13px; border-radius:6px; cursor:pointer;">clean project</button>
+        <button onClick="{{ loadBroken }}" style="font-family:'JetBrains Mono',monospace; font-size:12px; color:#caa; background:transparent; border:1px solid rgba(255,176,32,0.3); padding:9px 13px; border-radius:6px; cursor:pointer;">broken manifest</button>
+      </div>
+    </div>
+
+    <!-- ambient radar -->
+    <div class="dv-landing-radar" style="position:relative; overflow:hidden;">
+      <div style="position:absolute; right:clamp(-56px,-2.5vw,-16px); top:50%; transform:translateY(-50%); width:clamp(360px,38vw,520px); height:clamp(360px,38vw,520px); border-radius:50%; overflow:hidden; border:1px solid rgba(184,255,92,0.18); box-shadow:inset 0 0 80px rgba(184,255,92,0.05), 0 0 60px -10px rgba(184,255,92,0.14);">
+        <div style="position:absolute; left:50%; top:50%; width:50%; height:50%; transform-origin:0 0; background:conic-gradient(from 0deg, rgba(184,255,92,0.26), rgba(184,255,92,0) 62deg); animation:dv-sweep 4.5s linear infinite;"></div>
+        <svg viewBox="0 0 520 520" style="position:absolute; inset:0;">
+          <circle cx="260" cy="260" r="70" fill="none" stroke="rgba(184,255,92,0.13)"/><circle cx="260" cy="260" r="140" fill="none" stroke="rgba(184,255,92,0.1)"/><circle cx="260" cy="260" r="215" fill="none" stroke="rgba(184,255,92,0.08)"/>
+          <line x1="260" y1="30" x2="260" y2="490" stroke="rgba(184,255,92,0.09)"/><line x1="30" y1="260" x2="490" y2="260" stroke="rgba(184,255,92,0.09)"/>
+          <circle cx="260" cy="260" r="6" fill="#b8ff5c"/>
+          <circle cx="350" cy="180" r="4" fill="#b8ff5c" style="animation:dv-pulse 3s infinite;"/><circle cx="170" cy="330" r="4" fill="#b8ff5c" style="animation:dv-pulse 3.5s infinite;"/><circle cx="360" cy="350" r="4" fill="#b8ff5c" style="animation:dv-pulse 2.7s infinite;"/><circle cx="150" cy="170" r="4" fill="#b8ff5c" style="animation:dv-pulse 3.2s infinite;"/><circle cx="400" cy="270" r="4" fill="#b8ff5c" style="animation:dv-pulse 2.4s infinite;"/>
+          <rect x="394" y="134" width="12" height="12" transform="rotate(45 400 140)" fill="#ff4530" style="animation:dv-pulse 1.8s infinite;"/>
+          <polygon points="190,360 197,373 183,373" fill="#ffb020" style="animation:dv-pulse 2.6s infinite;"/>
+        </svg>
+        <div style="position:absolute; inset:0; background:repeating-linear-gradient(transparent, transparent 3px, rgba(0,0,0,0.16) 4px);"></div>
+      </div>
+      <div style="position:absolute; bottom:34px; right:48px; text-align:right; font-size:10px; letter-spacing:0.16em; color:#4a5a38; line-height:1.8;">STANDBY · AWAITING MANIFEST<br><span style="color:#6f8a4a;">46 TARGET CAPACITY · 0 LOCKED</span></div>
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- ===================== ANALYZING ===================== -->
+  <sc-if value="{{ isAnalyzing }}" hint-placeholder-val="{{ false }}">
+  <div style="position:relative; z-index:2; min-height:calc(100vh - 61px); display:flex; flex-direction:column; align-items:center; justify-content:center; padding:30px;">
+    <div style="font-size:11px; letter-spacing:0.28em; color:#ffb020; text-transform:uppercase; margin-bottom:24px; animation:dv-flicker 1.6s infinite;">▸ scan in progress — do not close</div>
+
+    <!-- scope -->
+    <div style="position:relative; width:440px; height:440px; border-radius:50%; overflow:hidden; border:1px solid rgba(184,255,92,0.24); box-shadow:inset 0 0 70px rgba(184,255,92,0.07), 0 0 70px -8px rgba(184,255,92,0.22);">
+      <div style="position:absolute; left:50%; top:50%; width:50%; height:50%; transform-origin:0 0; background:conic-gradient(from 0deg, rgba(184,255,92,0.34), rgba(184,255,92,0) 64deg); animation:dv-sweep 2.4s linear infinite;"></div>
+      <svg viewBox="0 0 440 440" style="position:absolute; inset:0;">
+        <circle cx="220" cy="220" r="60" fill="none" stroke="rgba(184,255,92,0.14)"/><circle cx="220" cy="220" r="120" fill="none" stroke="rgba(184,255,92,0.11)"/><circle cx="220" cy="220" r="180" fill="none" stroke="rgba(184,255,92,0.08)"/>
+        <line x1="220" y1="20" x2="220" y2="420" stroke="rgba(184,255,92,0.09)"/><line x1="20" y1="220" x2="420" y2="220" stroke="rgba(184,255,92,0.09)"/>
+        <circle cx="220" cy="220" r="6" fill="#b8ff5c"/>
+        <g fill="#b8ff5c">
+          <circle cx="290" cy="150" r="3.5" style="animation:dv-blip .5s both .1s;"/><circle cx="150" cy="160" r="3.5" style="animation:dv-blip .5s both .25s;"/>
+          <circle cx="330" cy="240" r="3.5" style="animation:dv-blip .5s both .4s;"/><circle cx="130" cy="280" r="3.5" style="animation:dv-blip .5s both .55s;"/>
+          <circle cx="280" cy="320" r="3.5" style="animation:dv-blip .5s both .7s;"/><circle cx="210" cy="100" r="3.5" style="animation:dv-blip .5s both .85s;"/>
+          <circle cx="100" cy="200" r="3.5" style="animation:dv-blip .5s both 1s;"/><circle cx="360" cy="180" r="3.5" style="animation:dv-blip .5s both 1.15s;"/>
+          <circle cx="190" cy="340" r="3.5" style="animation:dv-blip .5s both 1.3s;"/><circle cx="340" cy="310" r="3.5" style="animation:dv-blip .5s both .6s;"/>
+        </g>
+        <polygon points="160,300 167,313 153,313" fill="#ffb020" style="animation:dv-ignite .6s both 1.4s;"/>
+        <g style="animation:dv-ignite .6s both 1.65s;"><rect x="354" y="114" width="13" height="13" transform="rotate(45 360 120)" fill="#ff4530"/><circle cx="360" cy="120" r="17" fill="none" stroke="#ff4530" stroke-width="1.5" opacity="0.6"/></g>
+        <g style="animation:dv-ignite .6s both 1.95s;"><rect x="114" y="124" width="13" height="13" transform="rotate(45 120 130)" fill="#ff4530"/><circle cx="120" cy="130" r="17" fill="none" stroke="#ff4530" stroke-width="1.5" opacity="0.6"/></g>
+      </svg>
+      <div style="position:absolute; inset:0; background:repeating-linear-gradient(transparent, transparent 3px, rgba(0,0,0,0.16) 4px);"></div>
+    </div>
+
+    <!-- readout -->
+    <div style="width:520px; max-width:92vw; margin-top:34px;">
+      <div style="display:flex; align-items:baseline; justify-content:space-between; margin-bottom:10px;">
+        <span style="font-size:12px; letter-spacing:0.18em; color:#cfe6b0;">PHASE {{ phaseNum }}/4 · {{ phaseText }}</span>
+        <span style="font-size:12px; color:#b8ff5c;">{{ scanCount }}/{{ scanTotal }}</span>
+      </div>
+      <div style="height:6px; border-radius:4px; background:rgba(184,255,92,0.1); overflow:hidden;">
+        <div style="height:100%; width:{{ scanPct }}%; background:linear-gradient(90deg,#6f8a4a,#b8ff5c); box-shadow:0 0 12px rgba(184,255,92,0.6); transition:width .12s linear;"></div>
+      </div>
+      <div style="margin-top:14px; font-size:11px; color:#6f8a4a; line-height:1.9;">
+        <div>› resolving transitive tree<span style="color:#b8ff5c;"> ok</span></div>
+        <div>› querying advisory feeds (OSV · GHSA · npm audit)<span style="color:#b8ff5c;"> ok</span></div>
+        <div style="color:#ffb020;">› inspecting postinstall scripts &amp; typosquats…</div>
+      </div>
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- ===================== REPORT ===================== -->
+  <sc-if value="{{ isReport }}" hint-placeholder-val="{{ false }}">
+  <div style="position:relative; z-index:2; height:calc(100vh - 61px); display:flex; flex-direction:column;">
+
+    <!-- ============ MIXED (ACTION REQUIRED) ============ -->
+    <sc-if value="{{ isMixed }}" hint-placeholder-val="{{ true }}">
+    <div style="display:flex; flex-direction:column; height:100%;">
+      <!-- verdict bar -->
+      <div class="dv-verdict" style="display:flex; align-items:center; gap:22px; padding:20px 30px; border-bottom:1px solid rgba(255,69,48,0.25); background:linear-gradient(90deg, rgba(255,69,48,0.1), rgba(255,69,48,0.02));">
+        <svg width="42" height="42" viewBox="0 0 42 42"><polygon points="21,4 38,33 4,33" fill="none" stroke="#ff5a48" stroke-width="2.6" stroke-linejoin="round"/><rect x="19.6" y="14" width="2.8" height="11" fill="#ff5a48"/><rect x="19.6" y="27.5" width="2.8" height="2.8" fill="#ff5a48"/></svg>
+        <div>
+          <div style="font-size:10px; letter-spacing:0.24em; color:#a07a3a; text-transform:uppercase; margin-bottom:4px;">Verdict · threat level high</div>
+          <div style="font-family:'Archivo',sans-serif; font-weight:800; font-size:30px; color:#ff5a48; text-transform:uppercase; letter-spacing:-0.015em; line-height:1;">Action required</div>
+        </div>
+        <div class="dv-verdict-stats" style="margin-left:auto; display:flex; align-items:center; gap:28px; flex-wrap:wrap;">
+          <div style="text-align:right;"><div style="font-size:28px; color:#ff5a48; font-weight:600;">03</div><div style="font-size:9px; color:#7a8a5a; letter-spacing:0.16em;">◆ CRITICAL</div></div>
+          <div style="text-align:right;"><div style="font-size:28px; color:#ffb020; font-weight:600;">02</div><div style="font-size:9px; color:#7a8a5a; letter-spacing:0.16em;">▲ WARNING</div></div>
+          <div style="text-align:right;"><div style="font-size:28px; color:#b8ff5c; font-weight:600;">41</div><div style="font-size:9px; color:#7a8a5a; letter-spacing:0.16em;">● HEALTHY</div></div>
+          <button onClick="{{ reset }}" style="font-family:'Archivo',sans-serif; font-weight:700; font-size:12px; letter-spacing:0.05em; text-transform:uppercase; color:#cfe6b0; background:transparent; border:1px solid rgba(184,255,92,0.35); padding:11px 18px; border-radius:7px; cursor:pointer; margin-left:8px;">↻ New scan</button>
+        </div>
+      </div>
+
+      <!-- caught banner -->
+      <div style="display:flex; align-items:center; gap:14px; padding:13px 30px; background:rgba(255,69,48,0.09); border-bottom:1px solid rgba(255,69,48,0.22);">
+        <span style="font-family:'Archivo',sans-serif; font-weight:800; font-size:11px; letter-spacing:0.18em; color:#0a0c07; background:#ff5a48; padding:4px 9px; border-radius:4px;">⚑ CAUGHT</span>
+        <span style="font-size:13px; color:#ffd2cb;"><span style="color:#fff; font-weight:600;">colorz<span>@1.4.0</span></span> is a typosquat of <span style="color:#fff;">colors</span> — and ships a hidden <span style="color:#ff8a7d;">postinstall</span> script. It would have run the moment you typed <span style="color:#cfe6b0;">npm install</span>.</span>
+        <span style="margin-left:auto; font-size:11px; color:#c98; letter-spacing:0.12em;">NO OTHER SCANNER FLAGGED THIS</span>
+      </div>
+
+      <!-- body -->
+      <div class="dv-report-body" style="flex:1; display:grid; grid-template-columns:minmax(0,430px) 1fr; min-height:0;">
+        <!-- left: scope -->
+        <div class="dv-scope-col" style="position:relative; border-right:1px solid rgba(184,255,92,0.12); display:flex; flex-direction:column; align-items:center; justify-content:center; padding:24px; overflow:hidden;">
+          <div style="position:absolute; top:18px; left:24px; font-size:10px; letter-spacing:0.18em; color:#6f8a4a; text-transform:uppercase;">Dependency scope · 46 nodes</div>
+          <div style="position:relative; width:340px; height:340px; border-radius:50%; overflow:hidden; border:1px solid rgba(184,255,92,0.2); box-shadow:inset 0 0 50px rgba(184,255,92,0.06);">
+            <div style="position:absolute; left:50%; top:50%; width:50%; height:50%; transform-origin:0 0; background:conic-gradient(from 0deg, rgba(184,255,92,0.24), rgba(184,255,92,0) 64deg); animation:dv-sweep 5s linear infinite;"></div>
+            <svg viewBox="0 0 340 340" style="position:absolute; inset:0;">
+              <circle cx="170" cy="170" r="50" fill="none" stroke="rgba(184,255,92,0.13)"/><circle cx="170" cy="170" r="95" fill="none" stroke="rgba(184,255,92,0.1)"/><circle cx="170" cy="170" r="140" fill="none" stroke="rgba(184,255,92,0.08)"/>
+              <line x1="170" y1="22" x2="170" y2="318" stroke="rgba(184,255,92,0.08)"/><line x1="22" y1="170" x2="318" y2="170" stroke="rgba(184,255,92,0.08)"/>
+              <circle cx="170" cy="170" r="6" fill="#b8ff5c"/>
+              <g fill="#b8ff5c"><circle cx="235" cy="115" r="3.5"/><circle cx="105" cy="120" r="3.5"/><circle cx="255" cy="195" r="3.5"/><circle cx="110" cy="225" r="3.5"/><circle cx="215" cy="245" r="3.5"/><circle cx="150" cy="80" r="3.5"/><circle cx="80" cy="175" r="3.5"/><circle cx="270" cy="150" r="3.5"/><circle cx="145" cy="265" r="3.5"/></g>
+              <polygon points="200,250 207,263 193,263" fill="#ffb020"/><polygon points="95,250 102,263 88,263" fill="#ffb020"/>
+              <g style="animation:dv-pulse 1.7s infinite;"><rect x="259" y="79" width="13" height="13" transform="rotate(45 265 85)" fill="#ff4530"/><circle cx="265" cy="85" r="17" fill="none" stroke="#ff4530" stroke-width="1.5" opacity="0.55"/></g>
+              <g style="animation:dv-pulse 2s infinite;"><rect x="74" y="84" width="12" height="12" transform="rotate(45 80 90)" fill="#ff4530"/></g>
+              <g style="animation:dv-pulse 2.3s infinite;"><rect x="244" y="244" width="12" height="12" transform="rotate(45 250 250)" fill="#ff4530"/></g>
+            </svg>
+            <div style="position:absolute; inset:0; background:repeating-linear-gradient(transparent, transparent 3px, rgba(0,0,0,0.15) 4px);"></div>
+          </div>
+          <!-- legend -->
+          <div style="display:flex; gap:18px; margin-top:26px; font-size:10px; letter-spacing:0.1em; color:#8aa06a;">
+            <span style="display:flex; align-items:center; gap:6px;"><span style="width:9px;height:9px;background:#ff4530;transform:rotate(45deg);display:inline-block;"></span>CRITICAL</span>
+            <span style="display:flex; align-items:center; gap:6px;"><span style="width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-bottom:9px solid #ffb020;display:inline-block;"></span>WARNING</span>
+            <span style="display:flex; align-items:center; gap:6px;"><span style="width:9px;height:9px;border-radius:50%;background:#b8ff5c;display:inline-block;"></span>HEALTHY</span>
+          </div>
+        </div>
+
+        <!-- right: fixes + tree -->
+        <div class="dv-report-right" style="overflow-y:auto; padding:24px 28px; min-width:0;">
+          <div style="font-size:10px; letter-spacing:0.22em; color:#ffb020; text-transform:uppercase; margin-bottom:14px;">▸ Neutralize first — 3 actions</div>
+          <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:12px; margin-bottom:32px;">
+            <!-- fix 1 -->
+            <div style="background:rgba(255,69,48,0.07); border:1px solid rgba(255,69,48,0.3); border-radius:9px; padding:14px;">
+              <div style="display:flex; align-items:center; gap:8px; margin-bottom:9px;"><span style="width:11px;height:11px;background:#ff4530;transform:rotate(45deg);display:inline-block;"></span><span style="font-size:10px; color:#ff8a7d; letter-spacing:0.12em;">CRITICAL · 01</span></div>
+              <div style="font-size:14px; color:#ffd2cb; font-weight:600; margin-bottom:6px;">colorz<span>@1.4.0</span></div>
+              <div style="font-size:11.5px; color:#c79a92; line-height:1.5; margin-bottom:12px;">Typosquat + malicious postinstall. Not a dependency you chose.</div>
+              <div style="font-family:'Archivo',sans-serif; font-weight:700; font-size:12px; letter-spacing:0.04em; text-transform:uppercase; color:#0a0c07; background:#ff5a48; padding:8px 12px; border-radius:6px; text-align:center;">Remove now</div>
+            </div>
+            <!-- fix 2 -->
+            <div style="background:rgba(255,69,48,0.07); border:1px solid rgba(255,69,48,0.3); border-radius:9px; padding:14px;">
+              <div style="display:flex; align-items:center; gap:8px; margin-bottom:9px;"><span style="width:11px;height:11px;background:#ff4530;transform:rotate(45deg);display:inline-block;"></span><span style="font-size:10px; color:#ff8a7d; letter-spacing:0.12em;">CRITICAL · 02</span></div>
+              <div style="font-size:14px; color:#ffd2cb; font-weight:600; margin-bottom:6px;">lodash<span>@4.17.11</span></div>
+              <div style="font-size:11.5px; color:#c79a92; line-height:1.5; margin-bottom:12px;">Prototype pollution, CVE-2019-10744. Patched upstream.</div>
+              <div style="font-family:'JetBrains Mono',monospace; font-weight:600; font-size:12px; color:#0a0c07; background:#b8ff5c; padding:8px 12px; border-radius:6px; text-align:center;">↑ upgrade → 4.17.21</div>
+            </div>
+            <!-- fix 3 -->
+            <div style="background:rgba(255,69,48,0.07); border:1px solid rgba(255,69,48,0.3); border-radius:9px; padding:14px;">
+              <div style="display:flex; align-items:center; gap:8px; margin-bottom:9px;"><span style="width:11px;height:11px;background:#ff4530;transform:rotate(45deg);display:inline-block;"></span><span style="font-size:10px; color:#ff8a7d; letter-spacing:0.12em;">CRITICAL · 03</span></div>
+              <div style="font-size:14px; color:#ffd2cb; font-weight:600; margin-bottom:6px;">minimist<span>@1.2.0</span></div>
+              <div style="font-size:11.5px; color:#c79a92; line-height:1.5; margin-bottom:12px;">Argument injection, CVE-2021-44906. Low-effort fix.</div>
+              <div style="font-family:'JetBrains Mono',monospace; font-weight:600; font-size:12px; color:#0a0c07; background:#b8ff5c; padding:8px 12px; border-radius:6px; text-align:center;">↑ upgrade → 1.2.8</div>
+            </div>
+          </div>
+
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+            <span style="font-size:10px; letter-spacing:0.22em; color:#6f8a4a; text-transform:uppercase;">▸ Full dependency tree — 46 packages</span>
+            <span style="font-size:10px; color:#4a5a38; letter-spacing:0.1em;">click a row to inspect</span>
+          </div>
+          <div style="border:1px solid rgba(184,255,92,0.12); border-radius:9px; overflow:hidden;">
+
+            <!-- ROW: colorz -->
+            <details class="dv-row" open style="border-bottom:1px solid rgba(184,255,92,0.08);">
+              <summary style="display:flex; align-items:center; gap:14px; padding:13px 16px;">
+                <span style="width:11px;height:11px;background:#ff4530;transform:rotate(45deg);display:inline-block; flex-shrink:0;"></span>
+                <span style="font-size:13px; color:#ffd2cb; font-weight:600; min-width:170px;">colorz<span style="color:#8a6a5a;">@1.4.0</span></span>
+                <span style="font-size:10px; color:#ff8a7d; letter-spacing:0.12em; border:1px solid rgba(255,90,72,0.4); padding:2px 7px; border-radius:3px;">TYPOSQUAT · INSTALL-SCRIPT</span>
+                <span style="margin-left:auto; font-size:11px; color:#8a6a5a;">3.4k/wk · 1 maintainer</span>
+                <span class="dv-chev" style="color:#6f8a4a; font-size:12px;">▸</span>
+              </summary>
+              <div style="padding:4px 16px 18px 41px; background:rgba(255,69,48,0.04);">
+                <div style="font-size:12px; color:#e7b3ab; line-height:1.6; margin-bottom:14px; max-width:680px;">Published 6 days ago, name is one edit-distance from <span style="color:#fff;">colors</span> (220M downloads/wk). Ships a <span style="color:#ff8a7d;">postinstall</span> hook that fetches and executes a remote script. This is an active supply-chain attack.</div>
+                <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(112px,1fr)); gap:10px; margin-bottom:14px;">
+                  <div style="background:rgba(0,0,0,0.25); border:1px solid rgba(184,255,92,0.1); border-radius:7px; padding:10px;"><div style="font-size:9px; color:#6f8a4a; letter-spacing:0.12em; margin-bottom:5px;">LAST PUBLISH</div><div style="font-size:13px; color:#ffb1a8;">6 days ago</div></div>
+                  <div style="background:rgba(0,0,0,0.25); border:1px solid rgba(184,255,92,0.1); border-radius:7px; padding:10px;"><div style="font-size:9px; color:#6f8a4a; letter-spacing:0.12em; margin-bottom:5px;">WEEKLY DL</div><div style="font-size:13px; color:#cfe6b0;">3,412</div></div>
+                  <div style="background:rgba(0,0,0,0.25); border:1px solid rgba(184,255,92,0.1); border-radius:7px; padding:10px;"><div style="font-size:9px; color:#6f8a4a; letter-spacing:0.12em; margin-bottom:5px;">MAINTAINERS</div><div style="font-size:13px; color:#ffb1a8;">1 · new account</div></div>
+                  <div style="background:rgba(255,69,48,0.1); border:1px solid rgba(255,69,48,0.35); border-radius:7px; padding:10px;"><div style="font-size:9px; color:#ff8a7d; letter-spacing:0.12em; margin-bottom:5px;">INSTALL SCRIPT</div><div style="font-size:13px; color:#ff8a7d;">⚑ postinstall</div></div>
+                </div>
+                <div style="display:inline-flex; align-items:center; gap:8px; font-family:'Archivo',sans-serif; font-weight:700; font-size:12px; letter-spacing:0.04em; text-transform:uppercase; color:#0a0c07; background:#ff5a48; padding:9px 16px; border-radius:6px;">Remove from dependencies</div>
+              </div>
+            </details>
+
+            <!-- ROW: lodash -->
+            <details class="dv-row" style="border-bottom:1px solid rgba(184,255,92,0.08);">
+              <summary style="display:flex; align-items:center; gap:14px; padding:13px 16px;">
+                <span style="width:11px;height:11px;background:#ff4530;transform:rotate(45deg);display:inline-block; flex-shrink:0;"></span>
+                <span style="font-size:13px; color:#ffd2cb; font-weight:600; min-width:170px;">lodash<span style="color:#8a6a5a;">@4.17.11</span></span>
+                <span style="font-size:10px; color:#ff8a7d; letter-spacing:0.12em; border:1px solid rgba(255,90,72,0.4); padding:2px 7px; border-radius:3px;">1 HIGH CVE</span>
+                <span style="margin-left:auto; font-size:11px; color:#8aa06a;">48M/wk · 2 maintainers</span>
+                <span class="dv-chev" style="color:#6f8a4a; font-size:12px;">▸</span>
+              </summary>
+              <div style="padding:4px 16px 18px 41px; background:rgba(255,69,48,0.04);">
+                <div style="border-left:2px solid #ff5a48; padding-left:12px; margin-bottom:14px;"><div style="font-size:12px; color:#ffd2cb;">CVE-2019-10744 · <span style="color:#ff8a7d;">HIGH (7.4)</span></div><div style="font-size:12px; color:#bfae8f; margin-top:2px;">Prototype pollution in defaultsDeep allowing property injection.</div></div>
+                <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(112px,1fr)); gap:10px; margin-bottom:14px;">
+                  <div style="background:rgba(0,0,0,0.25); border:1px solid rgba(184,255,92,0.1); border-radius:7px; padding:10px;"><div style="font-size:9px; color:#6f8a4a; letter-spacing:0.12em; margin-bottom:5px;">LAST PUBLISH</div><div style="font-size:13px; color:#cfe6b0;">2.1 yrs ago</div></div>
+                  <div style="background:rgba(0,0,0,0.25); border:1px solid rgba(184,255,92,0.1); border-radius:7px; padding:10px;"><div style="font-size:9px; color:#6f8a4a; letter-spacing:0.12em; margin-bottom:5px;">WEEKLY DL</div><div style="font-size:13px; color:#cfe6b0;">48.2M</div></div>
+                  <div style="background:rgba(0,0,0,0.25); border:1px solid rgba(184,255,92,0.1); border-radius:7px; padding:10px;"><div style="font-size:9px; color:#6f8a4a; letter-spacing:0.12em; margin-bottom:5px;">MAINTAINERS</div><div style="font-size:13px; color:#cfe6b0;">2</div></div>
+                  <div style="background:rgba(0,0,0,0.25); border:1px solid rgba(184,255,92,0.1); border-radius:7px; padding:10px;"><div style="font-size:9px; color:#6f8a4a; letter-spacing:0.12em; margin-bottom:5px;">INSTALL SCRIPT</div><div style="font-size:13px; color:#b8ff5c;">none</div></div>
+                </div>
+                <div style="display:inline-flex; align-items:center; gap:8px; font-family:'JetBrains Mono',monospace; font-weight:600; font-size:12px; color:#0a0c07; background:#b8ff5c; padding:9px 16px; border-radius:6px;">npm i lodash<span>@4.17.21</span></div>
+              </div>
+            </details>
+
+            <!-- ROW: minimist -->
+            <details class="dv-row" style="border-bottom:1px solid rgba(184,255,92,0.08);">
+              <summary style="display:flex; align-items:center; gap:14px; padding:13px 16px;">
+                <span style="width:11px;height:11px;background:#ff4530;transform:rotate(45deg);display:inline-block; flex-shrink:0;"></span>
+                <span style="font-size:13px; color:#ffd2cb; font-weight:600; min-width:170px;">minimist<span style="color:#8a6a5a;">@1.2.0</span></span>
+                <span style="font-size:10px; color:#ff8a7d; letter-spacing:0.12em; border:1px solid rgba(255,90,72,0.4); padding:2px 7px; border-radius:3px;">1 CVE</span>
+                <span style="margin-left:auto; font-size:11px; color:#8aa06a;">61M/wk · 1 maintainer</span>
+                <span class="dv-chev" style="color:#6f8a4a; font-size:12px;">▸</span>
+              </summary>
+              <div style="padding:4px 16px 18px 41px; background:rgba(255,69,48,0.04);">
+                <div style="border-left:2px solid #ff5a48; padding-left:12px; margin-bottom:14px;"><div style="font-size:12px; color:#ffd2cb;">CVE-2021-44906 · <span style="color:#ff8a7d;">HIGH (7.5)</span></div><div style="font-size:12px; color:#bfae8f; margin-top:2px;">Argument injection via crafted proto keys in parsed args.</div></div>
+                <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(112px,1fr)); gap:10px; margin-bottom:14px;">
+                  <div style="background:rgba(0,0,0,0.25); border:1px solid rgba(184,255,92,0.1); border-radius:7px; padding:10px;"><div style="font-size:9px; color:#6f8a4a; letter-spacing:0.12em; margin-bottom:5px;">LAST PUBLISH</div><div style="font-size:13px; color:#cfe6b0;">4.0 yrs ago</div></div>
+                  <div style="background:rgba(0,0,0,0.25); border:1px solid rgba(184,255,92,0.1); border-radius:7px; padding:10px;"><div style="font-size:9px; color:#6f8a4a; letter-spacing:0.12em; margin-bottom:5px;">WEEKLY DL</div><div style="font-size:13px; color:#cfe6b0;">61.0M</div></div>
+                  <div style="background:rgba(0,0,0,0.25); border:1px solid rgba(184,255,92,0.1); border-radius:7px; padding:10px;"><div style="font-size:9px; color:#6f8a4a; letter-spacing:0.12em; margin-bottom:5px;">MAINTAINERS</div><div style="font-size:13px; color:#cfe6b0;">1</div></div>
+                  <div style="background:rgba(0,0,0,0.25); border:1px solid rgba(184,255,92,0.1); border-radius:7px; padding:10px;"><div style="font-size:9px; color:#6f8a4a; letter-spacing:0.12em; margin-bottom:5px;">INSTALL SCRIPT</div><div style="font-size:13px; color:#b8ff5c;">none</div></div>
+                </div>
+                <div style="display:inline-flex; align-items:center; gap:8px; font-family:'JetBrains Mono',monospace; font-weight:600; font-size:12px; color:#0a0c07; background:#b8ff5c; padding:9px 16px; border-radius:6px;">npm i minimist<span>@1.2.8</span></div>
+              </div>
+            </details>
+
+            <!-- ROW: axios (warning) -->
+            <details class="dv-row" style="border-bottom:1px solid rgba(184,255,92,0.08);">
+              <summary style="display:flex; align-items:center; gap:14px; padding:13px 16px;">
+                <span style="width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-bottom:11px solid #ffb020;display:inline-block; flex-shrink:0;"></span>
+                <span style="font-size:13px; color:#f4d49a; font-weight:600; min-width:170px;">axios<span style="color:#8a7a4a;">@0.21.1</span></span>
+                <span style="font-size:10px; color:#ffc870; letter-spacing:0.12em; border:1px solid rgba(255,176,32,0.4); padding:2px 7px; border-radius:3px;">OUTDATED · 1 MODERATE</span>
+                <span style="margin-left:auto; font-size:11px; color:#8aa06a;">38M/wk · 5 maintainers</span>
+                <span class="dv-chev" style="color:#6f8a4a; font-size:12px;">▸</span>
+              </summary>
+              <div style="padding:4px 16px 18px 41px; background:rgba(255,176,32,0.04);">
+                <div style="border-left:2px solid #ffb020; padding-left:12px; margin-bottom:14px;"><div style="font-size:12px; color:#f4d49a;">CVE-2020-28168 · <span style="color:#ffc870;">MODERATE (5.9)</span></div><div style="font-size:12px; color:#bfae8f; margin-top:2px;">SSRF via redirect bypass of proxy configuration. Fixed in 0.21.2+.</div></div>
+                <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(112px,1fr)); gap:10px; margin-bottom:14px;">
+                  <div style="background:rgba(0,0,0,0.25); border:1px solid rgba(184,255,92,0.1); border-radius:7px; padding:10px;"><div style="font-size:9px; color:#6f8a4a; letter-spacing:0.12em; margin-bottom:5px;">LAST PUBLISH</div><div style="font-size:13px; color:#cfe6b0;">3.2 yrs ago</div></div>
+                  <div style="background:rgba(0,0,0,0.25); border:1px solid rgba(184,255,92,0.1); border-radius:7px; padding:10px;"><div style="font-size:9px; color:#6f8a4a; letter-spacing:0.12em; margin-bottom:5px;">WEEKLY DL</div><div style="font-size:13px; color:#cfe6b0;">38.4M</div></div>
+                  <div style="background:rgba(0,0,0,0.25); border:1px solid rgba(184,255,92,0.1); border-radius:7px; padding:10px;"><div style="font-size:9px; color:#6f8a4a; letter-spacing:0.12em; margin-bottom:5px;">MAINTAINERS</div><div style="font-size:13px; color:#cfe6b0;">5</div></div>
+                  <div style="background:rgba(0,0,0,0.25); border:1px solid rgba(184,255,92,0.1); border-radius:7px; padding:10px;"><div style="font-size:9px; color:#6f8a4a; letter-spacing:0.12em; margin-bottom:5px;">INSTALL SCRIPT</div><div style="font-size:13px; color:#b8ff5c;">none</div></div>
+                </div>
+                <div style="display:inline-flex; align-items:center; gap:8px; font-family:'JetBrains Mono',monospace; font-weight:600; font-size:12px; color:#0a0c07; background:#ffb020; padding:9px 16px; border-radius:6px;">npm i axios@^1.6.7</div>
+              </div>
+            </details>
+
+            <!-- ROW: moment (warning) -->
+            <details class="dv-row" style="border-bottom:1px solid rgba(184,255,92,0.08);">
+              <summary style="display:flex; align-items:center; gap:14px; padding:13px 16px;">
+                <span style="width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-bottom:11px solid #ffb020;display:inline-block; flex-shrink:0;"></span>
+                <span style="font-size:13px; color:#f4d49a; font-weight:600; min-width:170px;">moment<span style="color:#8a7a4a;">@2.18.1</span></span>
+                <span style="font-size:10px; color:#ffc870; letter-spacing:0.12em; border:1px solid rgba(255,176,32,0.4); padding:2px 7px; border-radius:3px;">UNMAINTAINED</span>
+                <span style="margin-left:auto; font-size:11px; color:#8aa06a;">12M/wk · legacy</span>
+                <span class="dv-chev" style="color:#6f8a4a; font-size:12px;">▸</span>
+              </summary>
+              <div style="padding:4px 16px 18px 41px; background:rgba(255,176,32,0.04);">
+                <div style="font-size:12px; color:#cbb78f; line-height:1.6; margin-bottom:14px; max-width:680px;">Project is in maintenance mode; the authors recommend modern alternatives. No active CVEs, but it adds ~290KB and won't receive fixes.</div>
+                <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(112px,1fr)); gap:10px; margin-bottom:14px;">
+                  <div style="background:rgba(0,0,0,0.25); border:1px solid rgba(184,255,92,0.1); border-radius:7px; padding:10px;"><div style="font-size:9px; color:#6f8a4a; letter-spacing:0.12em; margin-bottom:5px;">LAST PUBLISH</div><div style="font-size:13px; color:#f4d49a;">3.1 yrs ago</div></div>
+                  <div style="background:rgba(0,0,0,0.25); border:1px solid rgba(184,255,92,0.1); border-radius:7px; padding:10px;"><div style="font-size:9px; color:#6f8a4a; letter-spacing:0.12em; margin-bottom:5px;">WEEKLY DL</div><div style="font-size:13px; color:#cfe6b0;">12.1M</div></div>
+                  <div style="background:rgba(0,0,0,0.25); border:1px solid rgba(184,255,92,0.1); border-radius:7px; padding:10px;"><div style="font-size:9px; color:#6f8a4a; letter-spacing:0.12em; margin-bottom:5px;">MAINTAINERS</div><div style="font-size:13px; color:#cfe6b0;">4</div></div>
+                  <div style="background:rgba(0,0,0,0.25); border:1px solid rgba(184,255,92,0.1); border-radius:7px; padding:10px;"><div style="font-size:9px; color:#6f8a4a; letter-spacing:0.12em; margin-bottom:5px;">INSTALL SCRIPT</div><div style="font-size:13px; color:#b8ff5c;">none</div></div>
+                </div>
+                <div style="display:inline-flex; align-items:center; gap:8px; font-family:'JetBrains Mono',monospace; font-weight:600; font-size:12px; color:#0a0c07; background:#ffb020; padding:9px 16px; border-radius:6px;">migrate → dayjs</div>
+              </div>
+            </details>
+
+            <!-- ROW: react (healthy) -->
+            <details class="dv-row" style="border-bottom:1px solid rgba(184,255,92,0.08);">
+              <summary style="display:flex; align-items:center; gap:14px; padding:13px 16px;">
+                <span style="width:11px;height:11px;border-radius:50%;background:#b8ff5c;display:inline-block; flex-shrink:0;"></span>
+                <span style="font-size:13px; color:#cfe6b0; font-weight:600; min-width:170px;">react<span style="color:#5d7340;">@18.2.0</span></span>
+                <span style="font-size:10px; color:#8aa06a; letter-spacing:0.12em;">✓ HEALTHY</span>
+                <span style="margin-left:auto; font-size:11px; color:#6f8a4a;">24M/wk · current</span>
+                <span class="dv-chev" style="color:#6f8a4a; font-size:12px;">▸</span>
+              </summary>
+              <div style="padding:4px 16px 18px 41px;">
+                <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(112px,1fr)); gap:10px;">
+                  <div style="background:rgba(0,0,0,0.25); border:1px solid rgba(184,255,92,0.1); border-radius:7px; padding:10px;"><div style="font-size:9px; color:#6f8a4a; letter-spacing:0.12em; margin-bottom:5px;">LAST PUBLISH</div><div style="font-size:13px; color:#cfe6b0;">4 mo ago</div></div>
+                  <div style="background:rgba(0,0,0,0.25); border:1px solid rgba(184,255,92,0.1); border-radius:7px; padding:10px;"><div style="font-size:9px; color:#6f8a4a; letter-spacing:0.12em; margin-bottom:5px;">WEEKLY DL</div><div style="font-size:13px; color:#cfe6b0;">24.0M</div></div>
+                  <div style="background:rgba(0,0,0,0.25); border:1px solid rgba(184,255,92,0.1); border-radius:7px; padding:10px;"><div style="font-size:9px; color:#6f8a4a; letter-spacing:0.12em; margin-bottom:5px;">MAINTAINERS</div><div style="font-size:13px; color:#cfe6b0;">12</div></div>
+                  <div style="background:rgba(0,0,0,0.25); border:1px solid rgba(184,255,92,0.1); border-radius:7px; padding:10px;"><div style="font-size:9px; color:#6f8a4a; letter-spacing:0.12em; margin-bottom:5px;">INSTALL SCRIPT</div><div style="font-size:13px; color:#b8ff5c;">none</div></div>
+                </div>
+              </div>
+            </details>
+
+            <!-- ROW: express (healthy) -->
+            <details class="dv-row" style="border-bottom:1px solid rgba(184,255,92,0.08);">
+              <summary style="display:flex; align-items:center; gap:14px; padding:13px 16px;">
+                <span style="width:11px;height:11px;border-radius:50%;background:#b8ff5c;display:inline-block; flex-shrink:0;"></span>
+                <span style="font-size:13px; color:#cfe6b0; font-weight:600; min-width:170px;">express<span style="color:#5d7340;">@4.18.2</span></span>
+                <span style="font-size:10px; color:#8aa06a; letter-spacing:0.12em;">✓ HEALTHY</span>
+                <span style="margin-left:auto; font-size:11px; color:#6f8a4a;">30M/wk · current</span>
+                <span class="dv-chev" style="color:#6f8a4a; font-size:12px;">▸</span>
+              </summary>
+              <div style="padding:4px 16px 18px 41px;">
+                <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(112px,1fr)); gap:10px;">
+                  <div style="background:rgba(0,0,0,0.25); border:1px solid rgba(184,255,92,0.1); border-radius:7px; padding:10px;"><div style="font-size:9px; color:#6f8a4a; letter-spacing:0.12em; margin-bottom:5px;">LAST PUBLISH</div><div style="font-size:13px; color:#cfe6b0;">7 mo ago</div></div>
+                  <div style="background:rgba(0,0,0,0.25); border:1px solid rgba(184,255,92,0.1); border-radius:7px; padding:10px;"><div style="font-size:9px; color:#6f8a4a; letter-spacing:0.12em; margin-bottom:5px;">WEEKLY DL</div><div style="font-size:13px; color:#cfe6b0;">30.3M</div></div>
+                  <div style="background:rgba(0,0,0,0.25); border:1px solid rgba(184,255,92,0.1); border-radius:7px; padding:10px;"><div style="font-size:9px; color:#6f8a4a; letter-spacing:0.12em; margin-bottom:5px;">MAINTAINERS</div><div style="font-size:13px; color:#cfe6b0;">9</div></div>
+                  <div style="background:rgba(0,0,0,0.25); border:1px solid rgba(184,255,92,0.1); border-radius:7px; padding:10px;"><div style="font-size:9px; color:#6f8a4a; letter-spacing:0.12em; margin-bottom:5px;">INSTALL SCRIPT</div><div style="font-size:13px; color:#b8ff5c;">none</div></div>
+                </div>
+              </div>
+            </details>
+
+            <!-- collapsed healthy note -->
+            <div style="display:flex; align-items:center; gap:12px; padding:13px 16px; color:#6f8a4a; font-size:12px;">
+              <span style="width:9px;height:9px;border-radius:50%;background:rgba(184,255,92,0.4);display:inline-block;"></span>
+              + 39 more packages — all healthy, no advisories
+              <span style="margin-left:auto; color:#4a5a38; cursor:pointer; border-bottom:1px dashed rgba(184,255,92,0.3);">show all</span>
+            </div>
+
+          </div>
+          <div style="height:20px;"></div>
+        </div>
+      </div>
+    </div>
+    </sc-if>
+
+    <!-- ============ HEALTHY (ALL CLEAR) ============ -->
+    <sc-if value="{{ isHealthy }}" hint-placeholder-val="{{ false }}">
+    <div style="display:flex; flex-direction:column; height:100%;">
+      <!-- verdict bar -->
+      <div class="dv-verdict" style="display:flex; align-items:center; gap:22px; padding:20px 30px; border-bottom:1px solid rgba(184,255,92,0.25); background:linear-gradient(90deg, rgba(184,255,92,0.1), rgba(184,255,92,0.02));">
+        <svg width="42" height="42" viewBox="0 0 42 42"><circle cx="21" cy="21" r="18" fill="none" stroke="#b8ff5c" stroke-width="2.4"/><path d="M13 21.5 L18.5 27 L29 15.5" fill="none" stroke="#b8ff5c" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div>
+          <div style="font-size:10px; letter-spacing:0.24em; color:#6f8a4a; text-transform:uppercase; margin-bottom:4px;">Verdict · cleared for install</div>
+          <div style="font-family:'Archivo',sans-serif; font-weight:800; font-size:30px; color:#b8ff5c; text-transform:uppercase; letter-spacing:-0.015em; line-height:1;">All clear</div>
+        </div>
+        <div class="dv-verdict-stats" style="margin-left:auto; display:flex; align-items:center; gap:28px; flex-wrap:wrap;">
+          <div style="text-align:right;"><div style="font-size:28px; color:#6f8a4a; font-weight:600;">00</div><div style="font-size:9px; color:#7a8a5a; letter-spacing:0.16em;">◆ CRITICAL</div></div>
+          <div style="text-align:right;"><div style="font-size:28px; color:#6f8a4a; font-weight:600;">00</div><div style="font-size:9px; color:#7a8a5a; letter-spacing:0.16em;">▲ WARNING</div></div>
+          <div style="text-align:right;"><div style="font-size:28px; color:#b8ff5c; font-weight:600;">38</div><div style="font-size:9px; color:#7a8a5a; letter-spacing:0.16em;">● HEALTHY</div></div>
+          <button onClick="{{ reset }}" style="font-family:'Archivo',sans-serif; font-weight:700; font-size:12px; letter-spacing:0.05em; text-transform:uppercase; color:#cfe6b0; background:transparent; border:1px solid rgba(184,255,92,0.35); padding:11px 18px; border-radius:7px; cursor:pointer; margin-left:8px;">↻ New scan</button>
+        </div>
+      </div>
+
+      <!-- body -->
+      <div class="dv-report-body" style="flex:1; display:grid; grid-template-columns:1fr 1fr; min-height:0;">
+        <!-- left: clean scope -->
+        <div class="dv-scope-col" style="position:relative; border-right:1px solid rgba(184,255,92,0.12); display:flex; align-items:center; justify-content:center; overflow:hidden;">
+          <div style="position:absolute; inset:0; background:radial-gradient(60% 60% at 50% 50%, rgba(184,255,92,0.08), transparent 70%);"></div>
+          <div style="position:relative; width:380px; height:380px; border-radius:50%; overflow:hidden; border:1px solid rgba(184,255,92,0.26); box-shadow:inset 0 0 60px rgba(184,255,92,0.1), 0 0 80px -10px rgba(184,255,92,0.3);">
+            <div style="position:absolute; left:50%; top:50%; width:50%; height:50%; transform-origin:0 0; background:conic-gradient(from 0deg, rgba(184,255,92,0.22), rgba(184,255,92,0) 70deg); animation:dv-sweep 6s linear infinite;"></div>
+            <svg viewBox="0 0 380 380" style="position:absolute; inset:0;">
+              <circle cx="190" cy="190" r="55" fill="none" stroke="rgba(184,255,92,0.14)"/><circle cx="190" cy="190" r="105" fill="none" stroke="rgba(184,255,92,0.11)"/><circle cx="190" cy="190" r="155" fill="none" stroke="rgba(184,255,92,0.08)"/>
+              <line x1="190" y1="30" x2="190" y2="350" stroke="rgba(184,255,92,0.08)"/><line x1="30" y1="190" x2="350" y2="190" stroke="rgba(184,255,92,0.08)"/>
+              <g fill="#b8ff5c"><circle cx="190" cy="190" r="6"/><circle cx="260" cy="130" r="3.5"/><circle cx="120" cy="135" r="3.5"/><circle cx="285" cy="215" r="3.5"/><circle cx="125" cy="250" r="3.5"/><circle cx="240" cy="270" r="3.5"/><circle cx="165" cy="95" r="3.5"/><circle cx="95" cy="195" r="3.5"/><circle cx="300" cy="170" r="3.5"/><circle cx="160" cy="290" r="3.5"/><circle cx="310" cy="250" r="3.5"/></g>
+            </svg>
+            <div style="position:absolute; inset:0; background:repeating-linear-gradient(transparent, transparent 3px, rgba(0,0,0,0.13) 4px);"></div>
+            <div style="position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); width:60px; height:60px; border-radius:50%; background:rgba(8,12,6,0.85); display:flex; align-items:center; justify-content:center; border:1px solid rgba(184,255,92,0.5);">
+              <svg width="30" height="30" viewBox="0 0 30 30"><path d="M8 15.5 L13 21 L23 9" fill="none" stroke="#b8ff5c" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- right: earned all-clear -->
+        <div style="display:flex; flex-direction:column; justify-content:center; padding:50px 56px; max-width:600px;">
+          <div style="font-size:11px; letter-spacing:0.24em; color:#6f8a4a; text-transform:uppercase; margin-bottom:18px;">Scan complete · 38/38 cleared</div>
+          <h2 style="font-family:'Archivo',sans-serif; font-weight:800; font-size:38px; line-height:1.02; margin:0 0 16px; letter-spacing:-0.02em; text-transform:uppercase;">Nothing hiding<br>in here.</h2>
+          <p style="font-size:13.5px; line-height:1.7; color:#93a883; margin:0 0 30px; max-width:440px;">Every dependency checks out against live advisories. No known CVEs, no abandoned packages, no typosquats, no install-time scripts. This manifest is safe to install.</p>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:26px;">
+            <div style="background:rgba(184,255,92,0.05); border:1px solid rgba(184,255,92,0.18); border-radius:9px; padding:14px 16px;"><div style="font-size:26px; color:#b8ff5c; font-weight:600;">0</div><div style="font-size:10px; color:#7a8a5a; letter-spacing:0.12em; margin-top:2px;">KNOWN VULNERABILITIES</div></div>
+            <div style="background:rgba(184,255,92,0.05); border:1px solid rgba(184,255,92,0.18); border-radius:9px; padding:14px 16px;"><div style="font-size:26px; color:#b8ff5c; font-weight:600;">0</div><div style="font-size:10px; color:#7a8a5a; letter-spacing:0.12em; margin-top:2px;">TYPOSQUATS DETECTED</div></div>
+            <div style="background:rgba(184,255,92,0.05); border:1px solid rgba(184,255,92,0.18); border-radius:9px; padding:14px 16px;"><div style="font-size:26px; color:#b8ff5c; font-weight:600;">0</div><div style="font-size:10px; color:#7a8a5a; letter-spacing:0.12em; margin-top:2px;">RISKY INSTALL SCRIPTS</div></div>
+            <div style="background:rgba(184,255,92,0.05); border:1px solid rgba(184,255,92,0.18); border-radius:9px; padding:14px 16px;"><div style="font-size:26px; color:#b8ff5c; font-weight:600;">38</div><div style="font-size:10px; color:#7a8a5a; letter-spacing:0.12em; margin-top:2px;">UP-TO-DATE PACKAGES</div></div>
+          </div>
+          <div style="font-family:'JetBrains Mono',monospace; font-size:12px; color:#6f8a4a; line-height:2;">
+            <span style="color:#b8ff5c;">✓</span> react<span>@18.2.0</span> &nbsp; <span style="color:#b8ff5c;">✓</span> express<span>@4.18.2</span> &nbsp; <span style="color:#b8ff5c;">✓</span> axios<span>@1.6.7</span><br>
+            <span style="color:#b8ff5c;">✓</span> lodash<span>@4.17.21</span> &nbsp; <span style="color:#b8ff5c;">✓</span> zod<span>@3.22.4</span> &nbsp; <span style="color:#b8ff5c;">✓</span> dayjs<span>@1.11.10</span> &nbsp; <span style="opacity:0.6;">+32 more</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    </sc-if>
+
+    <!-- HEALTHY -->
+
+  </div>
+  </sc-if>
+
+  <!-- SCREENS -->
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { screen:'landing', input:'', report:'mixed', error:null, scanPhase:0, scanCount:0 };
+  timers = [];
+
+  REAL = '{\n  "name": "acme-web",\n  "version": "2.4.1",\n  "dependencies": {\n    "react": "^18.2.0",\n    "express": "^4.18.2",\n    "axios": "0.21.1",\n    "lodash": "4.17.11",\n    "minimist": "1.2.0",\n    "moment": "2.18.1",\n    "colorz": "1.4.0"\n  }\n}';
+  CLEAN = '{\n  "name": "acme-web",\n  "version": "3.0.0",\n  "dependencies": {\n    "react": "^18.2.0",\n    "express": "^4.18.2",\n    "axios": "^1.6.7",\n    "lodash": "^4.17.21",\n    "zod": "^3.22.4",\n    "dayjs": "^1.11.10"\n  }\n}';
+  BROKEN = '{\n  "name": "acme-web",\n  "dependencies": {\n    "react": "^18.2.0",\n    "express": "^4.18.2",\n    "axios": "0.21.1",\n  }\n}';
+
+  PHASES = ['ESTABLISHING DEPENDENCY TREE','CROSS-REFERENCING CVE DATABASE','INSPECTING INSTALL SCRIPTS','COMPILING VERDICT'];
+
+  clearTimers(){ this.timers.forEach(t=>{ clearTimeout(t); clearInterval(t); }); this.timers=[]; }
+  componentWillUnmount(){ this.clearTimers(); }
+  componentDidUpdate(prevProps, prevState){
+    if(prevState.screen !== 'report' && this.state.screen === 'report'){
+      setTimeout(()=>{ const d = document.querySelector('details.dv-row'); if(d) d.open = true; }, 60);
+    }
+  }
+
+  setInput = (v)=> this.setState({ input:v, error:null });
+  loadReal = ()=> this.setState({ input:this.REAL, report:'mixed', error:null });
+  loadClean = ()=> this.setState({ input:this.CLEAN, report:'healthy', error:null });
+  loadBroken = ()=> this.setState({ input:this.BROKEN, report:'mixed', error:null });
+  reset = ()=>{ this.clearTimers(); this.setState({ screen:'landing', scanPhase:0, scanCount:0, error:null }); };
+
+  runScan = ()=>{
+    const t = (this.state.input||'').trim();
+    if(!t){ this.setState({ error:'NO MANIFEST LOADED — paste a package.json or pick a target above.' }); return; }
+    try { JSON.parse(t); }
+    catch(e){
+      let m = (e && e.message) ? e.message : 'invalid JSON';
+      this.setState({ error: 'MANIFEST UNREADABLE — ' + m + '. Check for a trailing comma or missing brace.' });
+      return;
+    }
+    this.startScan();
+  };
+
+  startScan = ()=>{
+    this.clearTimers();
+    const total = this.state.report==='healthy' ? 38 : 46;
+    this.setState({ screen:'analyzing', scanPhase:0, scanCount:0, error:null });
+    const ci = setInterval(()=>{
+      this.setState(s=>{
+        if(s.scanCount>=total) return {};
+        return { scanCount: Math.min(total, s.scanCount + Math.ceil(total/24)) };
+      });
+    }, 50);
+    this.timers.push(ci);
+    this.timers.push(setTimeout(()=> this.setState({ scanPhase:1 }), 800));
+    this.timers.push(setTimeout(()=> this.setState({ scanPhase:2 }), 1550));
+    this.timers.push(setTimeout(()=>{ clearInterval(ci); this.setState({ scanPhase:3, scanCount:total }); }, 2350));
+    this.timers.push(setTimeout(()=> this.setState({ screen:'report', scanPhase:0 }), 3150));
+  };
+
+  renderVals(){
+    const s = this.state;
+    const total = s.report==='healthy' ? 38 : 46;
+    return {
+      isLanding: s.screen==='landing',
+      isAnalyzing: s.screen==='analyzing',
+      isReport: s.screen==='report',
+      isMixed: s.report==='mixed',
+      isHealthy: s.report==='healthy',
+      input: s.input,
+      onInput: (e)=> this.setInput(e.target.value),
+      error: s.error,
+      hasError: !!s.error,
+      scanCount: s.scanCount,
+      scanTotal: total,
+      scanPct: Math.round((s.scanCount/total)*100),
+      phaseText: this.PHASES[s.scanPhase] || this.PHASES[0],
+      phaseNum: (s.scanPhase+1),
+      ignite: s.scanPhase>=2,
+      loadReal:this.loadReal, loadClean:this.loadClean, loadBroken:this.loadBroken,
+      runScan:this.runScan, reset:this.reset
+    };
+  }
+}
+</script>
+</body>
+</html>

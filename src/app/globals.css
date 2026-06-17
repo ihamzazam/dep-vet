@@ -1,26 +1,250 @@
 @import "tailwindcss";
 
+/* ============================================================
+   DepVet — "Mission Control" design tokens
+   (ported from DepVet Design System.dc.html / DepVet.dc.html)
+   ============================================================ */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* surfaces */
+  --dv-bg: #080c06;
+  --dv-bg-deep: #070a05;
+  --dv-panel: rgba(10, 16, 8, 0.7);
+
+  /* phosphor green (primary signal = healthy) */
+  --dv-phosphor: #b8ff5c;
+  --dv-data: #cfe6b0; /* mono data text */
+  --dv-fg: #eef5e4; /* primary text */
+  --dv-muted: #93a883;
+  --dv-dim: #6f8a4a;
+  --dv-dimmer: #4a5a38;
+
+  /* amber (warning) */
+  --dv-amber: #ffb020;
+  --dv-amber-2: #ffc870;
+  --dv-amber-text: #f4d49a;
+
+  /* red (critical) */
+  --dv-red: #ff4530;
+  --dv-red-2: #ff5a48;
+  --dv-red-text: #ff8a7d;
+  --dv-red-soft: #ffd2cb;
+
+  /* hairlines */
+  --dv-line: rgba(184, 255, 92, 0.1);
+  --dv-line-strong: rgba(184, 255, 92, 0.22);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-dv-bg: var(--dv-bg);
+  --color-dv-phosphor: var(--dv-phosphor);
+  --color-dv-amber: var(--dv-amber);
+  --color-dv-red: var(--dv-red);
+  --font-display: var(--font-archivo);
+  --font-mono: var(--font-jetbrains);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+* {
+  box-sizing: border-box;
+}
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--dv-bg-deep);
+}
+body {
+  color: var(--dv-fg);
+  font-family: var(--font-jetbrains), "JetBrains Mono", ui-monospace, monospace;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: rgba(184, 255, 92, 0.28);
+}
+::-webkit-scrollbar {
+  width: 9px;
+  height: 9px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(184, 255, 92, 0.18);
+  border-radius: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* expandable dependency rows */
+details > summary {
+  list-style: none;
+  cursor: pointer;
+}
+details > summary::-webkit-details-marker {
+  display: none;
+}
+.dv-row {
+  transition: background 0.15s;
+}
+.dv-row:hover > summary {
+  background: rgba(184, 255, 92, 0.05);
+}
+details[open] > summary {
+  background: rgba(184, 255, 92, 0.06);
+}
+details[open] .dv-chev {
+  transform: rotate(90deg);
+}
+.dv-chev {
+  transition: transform 0.2s ease;
+}
+
+/* ===================== keyframes ===================== */
+@keyframes dv-sweep {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes dv-scanline {
+  0% {
+    top: -2%;
+    opacity: 0;
+  }
+  8% {
+    opacity: 1;
+  }
+  92% {
+    opacity: 1;
+  }
+  100% {
+    top: 100%;
+    opacity: 0;
+  }
+}
+@keyframes dv-pulse {
+  0%,
+  100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+@keyframes dv-flicker {
+  0%,
+  100% {
+    opacity: 0.4;
+  }
+  48% {
+    opacity: 0.9;
+  }
+  50% {
+    opacity: 0.15;
+  }
+  52% {
+    opacity: 0.9;
+  }
+}
+@keyframes dv-blip {
+  0% {
+    transform: scale(0.2);
+    opacity: 0;
+  }
+  60% {
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+@keyframes dv-ignite {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  55% {
+    transform: scale(1.7);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+@keyframes dv-rise {
+  from {
+    transform: translateY(14px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+@keyframes dv-bar {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+.dv-rise {
+  animation: dv-rise 0.5s both;
+}
+
+/* ===================== responsive ===================== */
+@media (max-width: 1040px) {
+  .dv-report-body {
+    grid-template-columns: 1fr !important;
+  }
+  .dv-scope-col {
+    display: none !important;
+  }
+  .dv-verdict {
+    flex-wrap: wrap !important;
+    row-gap: 14px !important;
+  }
+  .dv-verdict-stats {
+    margin-left: 0 !important;
+    width: 100% !important;
+    justify-content: flex-start !important;
+  }
+}
+@media (max-width: 900px) {
+  .dv-landing {
+    grid-template-columns: 1fr !important;
+  }
+  .dv-landing-radar {
+    height: 340px !important;
+    min-height: 340px !important;
+    order: -1;
+  }
+  .dv-landing-copy {
+    max-width: none !important;
+    padding: 44px 32px 32px !important;
+  }
+}
+@media (max-width: 600px) {
+  .dv-h1 {
+    font-size: 40px !important;
+  }
+  .dv-landing-copy {
+    padding: 32px 22px 24px !important;
+  }
+  .dv-verdict {
+    padding: 16px 20px !important;
+  }
+  .dv-report-right {
+    padding: 18px 18px !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+  }
 }

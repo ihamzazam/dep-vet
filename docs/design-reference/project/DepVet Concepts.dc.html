@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; }
+  @keyframes dv-sweep { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+  @keyframes dv-scanline { 0% { top: 0%; opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { top: 100%; opacity: 0; } }
+  @keyframes dv-pulse { 0%, 100% { opacity: 0.35; } 50% { opacity: 1; } }
+  @keyframes dv-draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+  @keyframes dv-flicker { 0%,100% { opacity: 0.5; } 45% { opacity: 0.85; } 50% { opacity: 0.2; } 55% { opacity: 0.9; } }
+  @keyframes dv-blip { 0% { transform: scale(0.4); opacity: 0; } 30% { opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
+</style>
+</helmet>
+<div style="min-height: 100vh; background: #e7e7e9; font-family: 'Space Grotesk', sans-serif; padding: 56px 64px 120px; color: #1a1a1c;">
+
+  <div style="max-width: 980px; margin: 0 auto 64px;">
+    <div style="font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: #8a8a90; margin-bottom: 18px;">DepVet · Round One · 3 Concept Worlds</div>
+    <h1 style="font-family: 'Instrument Serif', serif; font-weight: 400; font-size: 60px; line-height: 1.0; margin: 0 0 20px; letter-spacing: -0.01em;">X-ray your code's supply chain.</h1>
+    <p style="max-width: 640px; font-size: 16px; line-height: 1.55; color: #4a4a50; margin: 0;">Three distinct directions for the landing + report hero. Same job — paste a <span style="font-family:'JetBrains Mono',monospace; font-size:14px;">package.json</span>, get one credible verdict and a prioritized fix list — three different instruments. Each frame below is a real, styled hero. Pick a world and I'll take it deep across every screen and state.</p>
+  </div>
+
+  <div data-concepts style="display: flex; flex-direction: column; gap: 96px; max-width: 2320px; margin: 0 auto;">
+
+    <!-- ============ CONCEPT A — LIGHTBOX ============ -->
+    <section>
+      <div style="display:flex; align-items:baseline; gap:18px; margin-bottom:6px;">
+        <div style="font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:600; letter-spacing:0.16em; color:#0a0e16; background:#46e2a4; padding:4px 9px; border-radius:3px; white-space:nowrap;">CONCEPT A</div>
+        <h2 style="font-family:'Instrument Serif',serif; font-weight:400; font-size:34px; margin:0; letter-spacing:-0.01em;">Lightbox</h2>
+      </div>
+      <p style="font-size:14px; color:#56565c; margin:0 0 26px; max-width:720px; line-height:1.5;">Diagnostic imaging. Editorial serif voice over a luminous, skeletal radial tree — the project at the core, dependencies radiating out like an x-ray on a lightbox. Risk lights up through the film.</p>
+
+      <div style="display:flex; gap:28px; flex-wrap:wrap;">
+
+        <!-- A · LANDING -->
+        <div style="width:1120px; max-width:100%; border-radius:14px; overflow:hidden; box-shadow:0 30px 70px -30px rgba(10,14,22,0.6); border:1px solid #d4d4d8;">
+          <div style="height:34px; background:#0d121c; display:flex; align-items:center; gap:7px; padding:0 14px; border-bottom:1px solid rgba(255,255,255,0.06);">
+            <span style="width:10px;height:10px;border-radius:50%;background:#2c3340;"></span>
+            <span style="width:10px;height:10px;border-radius:50%;background:#2c3340;"></span>
+            <span style="width:10px;height:10px;border-radius:50%;background:#2c3340;"></span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#4a5266; margin-left:14px;">depvet.dev</span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:10px; color:#566; margin-left:auto; letter-spacing:0.12em;">LANDING</span>
+          </div>
+          <div style="position:relative; height:640px; background:radial-gradient(120% 90% at 78% 28%, #12203a 0%, #0a0e16 52%, #070a11 100%); overflow:hidden;">
+            <!-- ambient radial xray graph -->
+            <svg viewBox="0 0 460 460" style="position:absolute; right:-40px; top:50%; transform:translateY(-50%); width:560px; height:560px; opacity:0.85;">
+              <defs>
+                <radialGradient id="aGlow" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stop-color="#46e2a4" stop-opacity="0.18"/>
+                  <stop offset="100%" stop-color="#46e2a4" stop-opacity="0"/>
+                </radialGradient>
+              </defs>
+              <circle cx="230" cy="230" r="200" fill="url(#aGlow)"/>
+              <circle cx="230" cy="230" r="70" fill="none" stroke="rgba(150,200,255,0.10)" stroke-width="1"/>
+              <circle cx="230" cy="230" r="130" fill="none" stroke="rgba(150,200,255,0.08)" stroke-width="1"/>
+              <circle cx="230" cy="230" r="190" fill="none" stroke="rgba(150,200,255,0.06)" stroke-width="1"/>
+              <g stroke="rgba(140,190,255,0.22)" stroke-width="1">
+                <line x1="230" y1="230" x2="300" y2="230"/><line x1="230" y1="230" x2="190" y2="130"/>
+                <line x1="230" y1="230" x2="110" y2="190"/><line x1="230" y1="230" x2="150" y2="320"/>
+                <line x1="230" y1="230" x2="320" y2="320"/><line x1="230" y1="230" x2="340" y2="160"/>
+                <line x1="300" y1="230" x2="400" y2="200"/><line x1="300" y1="230" x2="380" y2="290"/>
+                <line x1="190" y1="130" x2="210" y2="50"/><line x1="110" y1="190" x2="40" y2="150"/>
+                <line x1="150" y1="320" x2="120" y2="410"/><line x1="320" y1="320" x2="390" y2="390"/>
+              </g>
+              <!-- nodes -->
+              <circle cx="230" cy="230" r="13" fill="#0a0e16" stroke="#9fd0ff" stroke-width="1.5"/>
+              <circle cx="300" cy="230" r="5" fill="#46e2a4"/><circle cx="110" cy="190" r="5" fill="#46e2a4"/>
+              <circle cx="320" cy="320" r="5" fill="#46e2a4"/><circle cx="400" cy="200" r="4" fill="#46e2a4"/>
+              <circle cx="40" cy="150" r="4" fill="#46e2a4"/><circle cx="210" cy="50" r="4" fill="#46e2a4"/>
+              <circle cx="380" cy="290" r="4" fill="#46e2a4"/>
+              <g style="animation:dv-pulse 2.2s ease-in-out infinite;"><rect x="184" y="124" width="12" height="12" transform="rotate(45 190 130)" fill="#ff5468"/><circle cx="190" cy="130" r="14" fill="none" stroke="#ff5468" stroke-width="1.5" opacity="0.5"/></g>
+              <polygon points="150,313 157,326 143,326" fill="#f5b54a"/>
+              <polygon points="120,402 127,415 113,415" fill="#f5b54a"/>
+              <g style="animation:dv-pulse 2.6s ease-in-out infinite;"><rect x="334" y="154" width="11" height="11" transform="rotate(45 340 160)" fill="#ff5468"/></g>
+            </svg>
+            <!-- copy -->
+            <div style="position:relative; padding:74px 60px; max-width:620px;">
+              <div style="display:flex; align-items:center; gap:10px; margin-bottom:54px;">
+                <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="10" fill="none" stroke="#46e2a4" stroke-width="1.5"/><circle cx="11" cy="11" r="3.2" fill="#46e2a4"/></svg>
+                <span style="font-family:'Instrument Serif',serif; font-size:23px; letter-spacing:0.01em; color:#eef3fb;">Dep<span style="color:#46e2a4;">Vet</span></span>
+              </div>
+              <div style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.2em; color:#46e2a4; text-transform:uppercase; margin-bottom:18px;">Supply-chain diagnostics</div>
+              <h2 style="font-family:'Instrument Serif',serif; font-weight:400; font-size:54px; line-height:1.02; margin:0 0 18px; color:#f2f6fc; letter-spacing:-0.01em;">What's hiding in your dependencies?</h2>
+              <p style="font-size:15px; line-height:1.55; color:#93a0b8; margin:0 0 30px;">Paste your manifest. In seconds, every package is checked against real vulnerability data, abandonment, typosquats, and malicious install-scripts. One verdict. A prioritized fix list.</p>
+              <div style="background:rgba(10,16,28,0.72); border:1px solid rgba(140,190,255,0.18); border-radius:10px; padding:14px 16px; backdrop-filter:blur(6px);">
+                <div style="font-family:'JetBrains Mono',monospace; font-size:12px; color:#5b6b85; line-height:1.7;">{ "dependencies": {<br>&nbsp;&nbsp;<span style="color:#8aa0c4;">"react"</span>: <span style="color:#46e2a4;">"^18.2.0"</span>,<br>&nbsp;&nbsp;<span style="color:#3b4763;">paste your package.json…</span></div>
+              </div>
+              <div style="display:flex; align-items:center; gap:16px; margin-top:18px;">
+                <button style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:15px; color:#06140e; background:#46e2a4; border:none; padding:13px 26px; border-radius:8px; cursor:pointer; box-shadow:0 0 32px -6px rgba(70,226,164,0.5);">Run the scan →</button>
+                <a style="font-family:'JetBrains Mono',monospace; font-size:13px; color:#9fd0ff; text-decoration:none; border-bottom:1px dashed rgba(159,208,255,0.4); padding-bottom:2px; cursor:pointer;">Try an example</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- A · REPORT -->
+        <div style="width:1120px; max-width:100%; border-radius:14px; overflow:hidden; box-shadow:0 30px 70px -30px rgba(10,14,22,0.6); border:1px solid #d4d4d8;">
+          <div style="height:34px; background:#0d121c; display:flex; align-items:center; gap:7px; padding:0 14px; border-bottom:1px solid rgba(255,255,255,0.06);">
+            <span style="width:10px;height:10px;border-radius:50%;background:#2c3340;"></span>
+            <span style="width:10px;height:10px;border-radius:50%;background:#2c3340;"></span>
+            <span style="width:10px;height:10px;border-radius:50%;background:#2c3340;"></span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#4a5266; margin-left:14px;">depvet.dev/r/8f2a</span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:10px; color:#566; margin-left:auto; letter-spacing:0.12em;">REPORT</span>
+          </div>
+          <div style="position:relative; height:640px; background:radial-gradient(110% 80% at 30% 30%, #11203a 0%, #0a0e16 55%, #070a11 100%); display:flex;">
+            <!-- left: verdict + fixes -->
+            <div style="width:430px; padding:34px 30px; border-right:1px solid rgba(140,190,255,0.10); display:flex; flex-direction:column;">
+              <div style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.2em; color:#5b6b85; text-transform:uppercase; margin-bottom:14px;">Verdict</div>
+              <div style="display:flex; align-items:center; gap:14px; margin-bottom:6px;">
+                <svg width="34" height="34" viewBox="0 0 34 34"><rect x="6" y="6" width="22" height="22" rx="3" transform="rotate(45 17 17)" fill="none" stroke="#f5b54a" stroke-width="2"/><rect x="16" y="9" width="2" height="10" fill="#f5b54a"/><rect x="16" y="22" width="2" height="2" fill="#f5b54a"/></svg>
+                <div style="font-family:'Instrument Serif',serif; font-size:42px; line-height:0.95; color:#f2f6fc;">Needs<br>attention</div>
+              </div>
+              <div style="font-family:'JetBrains Mono',monospace; font-size:12px; color:#93a0b8; margin:16px 0 24px;"><span style="color:#ff5468;">2 critical</span> · <span style="color:#f5b54a;">3 warnings</span> · 41 healthy</div>
+
+              <div style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.2em; color:#5b6b85; text-transform:uppercase; margin-bottom:12px;">Fix these first</div>
+              <div style="display:flex; flex-direction:column; gap:10px;">
+                <div style="background:rgba(255,84,104,0.08); border:1px solid rgba(255,84,104,0.3); border-left:3px solid #ff5468; border-radius:8px; padding:12px 14px;">
+                  <div style="display:flex; align-items:center; gap:8px; margin-bottom:5px;"><span style="width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-bottom:10px solid #ff5468;display:inline-block;transform:rotate(45deg);"></span><span style="font-family:'JetBrains Mono',monospace; font-size:13px; color:#ffd4da; font-weight:600;">lodash@4.17.11</span></div>
+                  <div style="font-size:12.5px; color:#c9a7ab; line-height:1.45;">Prototype pollution (CVE-2019-10744). <span style="color:#fff;">Upgrade to 4.17.21.</span></div>
+                </div>
+                <div style="background:rgba(255,84,104,0.08); border:1px solid rgba(255,84,104,0.3); border-left:3px solid #ff5468; border-radius:8px; padding:12px 14px;">
+                  <div style="display:flex; align-items:center; gap:8px; margin-bottom:5px;"><span style="width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-bottom:10px solid #ff5468;display:inline-block;transform:rotate(45deg);"></span><span style="font-family:'JetBrains Mono',monospace; font-size:13px; color:#ffd4da; font-weight:600;">minimist@1.2.0</span></div>
+                  <div style="font-size:12.5px; color:#c9a7ab; line-height:1.45;">Argument injection. <span style="color:#fff;">Upgrade to 1.2.8.</span></div>
+                </div>
+                <div style="background:rgba(245,181,74,0.07); border:1px solid rgba(245,181,74,0.28); border-left:3px solid #f5b54a; border-radius:8px; padding:12px 14px;">
+                  <div style="display:flex; align-items:center; gap:8px; margin-bottom:5px;"><span style="width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-bottom:10px solid #f5b54a;display:inline-block;"></span><span style="font-family:'JetBrains Mono',monospace; font-size:13px; color:#f7dca6; font-weight:600;">moment@2.18.1</span></div>
+                  <div style="font-size:12.5px; color:#cbb78f; line-height:1.45;">Unmaintained 3+ yrs. <span style="color:#fff;">Migrate to day.js.</span></div>
+                </div>
+              </div>
+            </div>
+            <!-- right: x-ray tree -->
+            <div style="flex:1; position:relative; overflow:hidden;">
+              <div style="position:absolute; left:0; right:0; height:2px; background:linear-gradient(90deg, transparent, #9fd0ff, transparent); box-shadow:0 0 18px 2px rgba(159,208,255,0.6); animation:dv-scanline 4s ease-in-out infinite;"></div>
+              <svg viewBox="0 0 560 560" style="position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); width:600px; height:600px;">
+                <defs><radialGradient id="aGlow2" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#46e2a4" stop-opacity="0.12"/><stop offset="100%" stop-color="#46e2a4" stop-opacity="0"/></radialGradient></defs>
+                <circle cx="280" cy="280" r="240" fill="url(#aGlow2)"/>
+                <circle cx="280" cy="280" r="90" fill="none" stroke="rgba(150,200,255,0.10)"/><circle cx="280" cy="280" r="160" fill="none" stroke="rgba(150,200,255,0.08)"/><circle cx="280" cy="280" r="230" fill="none" stroke="rgba(150,200,255,0.06)"/>
+                <g stroke="rgba(140,190,255,0.20)" stroke-width="1">
+                  <line x1="280" y1="280" x2="370" y2="280"/><line x1="280" y1="280" x2="220" y2="160"/><line x1="280" y1="280" x2="140" y2="240"/>
+                  <line x1="280" y1="280" x2="180" y2="400"/><line x1="280" y1="280" x2="390" y2="400"/><line x1="280" y1="280" x2="410" y2="190"/>
+                  <line x1="370" y1="280" x2="490" y2="250"/><line x1="220" y1="160" x2="240" y2="60"/><line x1="140" y1="240" x2="50" y2="210"/>
+                  <line x1="180" y1="400" x2="140" y2="500"/><line x1="390" y1="400" x2="470" y2="480"/><line x1="410" y1="190" x2="500" y2="120"/>
+                </g>
+                <circle cx="280" cy="280" r="16" fill="#0a0e16" stroke="#9fd0ff" stroke-width="2"/>
+                <circle cx="370" cy="280" r="6" fill="#46e2a4"/><circle cx="490" cy="250" r="5" fill="#46e2a4"/><circle cx="140" cy="240" r="6" fill="#46e2a4"/>
+                <circle cx="50" cy="210" r="5" fill="#46e2a4"/><circle cx="390" cy="400" r="6" fill="#46e2a4"/><circle cx="470" cy="480" r="5" fill="#46e2a4"/>
+                <circle cx="240" cy="60" r="5" fill="#46e2a4"/><circle cx="500" cy="120" r="5" fill="#46e2a4"/>
+                <polygon points="180,392 188,406 172,406" fill="#f5b54a"/><polygon points="140,492 148,506 132,506" fill="#f5b54a"/>
+                <g style="animation:dv-pulse 2s ease-in-out infinite;"><rect x="213" y="153" width="14" height="14" transform="rotate(45 220 160)" fill="#ff5468"/><circle cx="220" cy="160" r="18" fill="none" stroke="#ff5468" stroke-width="1.5" opacity="0.5"/></g>
+                <g style="animation:dv-pulse 2.4s ease-in-out infinite;"><rect x="403" y="183" width="13" height="13" transform="rotate(45 410 190)" fill="#ff5468"/><circle cx="410" cy="190" r="16" fill="none" stroke="#ff5468" stroke-width="1.5" opacity="0.5"/></g>
+              </svg>
+              <div style="position:absolute; bottom:18px; left:0; right:0; text-align:center; font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.18em; color:#4a5670; text-transform:uppercase;">46 packages · hover a node to inspect</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+    <!-- ============ CONCEPT B — MISSION CONTROL ============ -->
+    <section>
+      <div style="display:flex; align-items:baseline; gap:18px; margin-bottom:6px;">
+        <div style="font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:600; letter-spacing:0.16em; color:#0a0c07; background:#b8ff5c; padding:4px 9px; border-radius:3px; white-space:nowrap;">CONCEPT B</div>
+        <h2 style="font-family:'Archivo',sans-serif; font-weight:800; font-size:30px; margin:0; letter-spacing:-0.02em; text-transform:uppercase;">Mission Control</h2>
+      </div>
+      <p style="font-size:14px; color:#56565c; margin:0 0 26px; max-width:720px; line-height:1.5;">Phosphor-CRT instrumentation. Industrial grotesque, a green radar scope with a live sweep, and amber telemetry readouts. The dependency tree is a target field — risk blips light up as the sweep passes. Feels like a console you trust under pressure.</p>
+
+      <div style="display:flex; gap:28px; flex-wrap:wrap;">
+
+        <!-- B · LANDING -->
+        <div style="width:1120px; max-width:100%; border-radius:14px; overflow:hidden; box-shadow:0 30px 70px -30px rgba(8,12,6,0.6); border:1px solid #d4d4d8;">
+          <div style="height:34px; background:#0a0f08; display:flex; align-items:center; gap:7px; padding:0 14px; border-bottom:1px solid rgba(184,255,92,0.10);">
+            <span style="width:10px;height:10px;border-radius:50%;background:#243018;"></span><span style="width:10px;height:10px;border-radius:50%;background:#243018;"></span><span style="width:10px;height:10px;border-radius:50%;background:#243018;"></span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#4a5a38; margin-left:14px;">depvet.dev</span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:10px; color:#566; margin-left:auto; letter-spacing:0.12em;">LANDING</span>
+          </div>
+          <div style="position:relative; height:640px; background:#080c06; overflow:hidden;">
+            <!-- grid -->
+            <div style="position:absolute; inset:0; background-image:linear-gradient(rgba(184,255,92,0.045) 1px, transparent 1px), linear-gradient(90deg, rgba(184,255,92,0.045) 1px, transparent 1px); background-size:38px 38px;"></div>
+            <!-- radar -->
+            <div style="position:absolute; right:46px; top:50%; transform:translateY(-50%); width:430px; height:430px; border-radius:50%; overflow:hidden; border:1px solid rgba(184,255,92,0.22); box-shadow:inset 0 0 60px rgba(184,255,92,0.06), 0 0 50px -10px rgba(184,255,92,0.18);">
+              <div style="position:absolute; inset:0; border-radius:50%;"></div>
+              <div style="position:absolute; left:50%; top:50%; width:50%; height:50%; transform-origin:0 0; background:conic-gradient(from 0deg, rgba(184,255,92,0.32), rgba(184,255,92,0) 60deg); animation:dv-sweep 4s linear infinite;"></div>
+              <svg viewBox="0 0 430 430" style="position:absolute; inset:0;">
+                <circle cx="215" cy="215" r="60" fill="none" stroke="rgba(184,255,92,0.16)"/><circle cx="215" cy="215" r="120" fill="none" stroke="rgba(184,255,92,0.13)"/><circle cx="215" cy="215" r="180" fill="none" stroke="rgba(184,255,92,0.10)"/>
+                <line x1="215" y1="20" x2="215" y2="410" stroke="rgba(184,255,92,0.12)"/><line x1="20" y1="215" x2="410" y2="215" stroke="rgba(184,255,92,0.12)"/>
+                <circle cx="215" cy="215" r="5" fill="#b8ff5c"/>
+                <circle cx="300" cy="150" r="4" fill="#b8ff5c" style="animation:dv-pulse 3s infinite;"/><circle cx="140" cy="270" r="4" fill="#b8ff5c" style="animation:dv-pulse 3.4s infinite;"/><circle cx="290" cy="300" r="4" fill="#b8ff5c" style="animation:dv-pulse 2.7s infinite;"/><circle cx="120" cy="150" r="4" fill="#b8ff5c" style="animation:dv-pulse 3.2s infinite;"/>
+                <rect x="318" y="118" width="11" height="11" transform="rotate(45 323 123)" fill="#ff4530" style="animation:dv-pulse 1.8s infinite;"/>
+                <polygon points="160,330 167,343 153,343" fill="#ffb020"/>
+              </svg>
+              <div style="position:absolute; inset:0; background:repeating-linear-gradient(transparent, transparent 3px, rgba(0,0,0,0.18) 4px);"></div>
+            </div>
+            <!-- copy -->
+            <div style="position:relative; padding:60px 56px; max-width:560px; height:100%; display:flex; flex-direction:column;">
+              <div style="display:flex; align-items:center; gap:11px; margin-bottom:auto;">
+                <svg width="20" height="20" viewBox="0 0 20 20"><rect x="2" y="2" width="16" height="16" rx="2" fill="none" stroke="#b8ff5c" stroke-width="1.5"/><line x1="10" y1="2" x2="10" y2="18" stroke="#b8ff5c" stroke-width="1.5"/><line x1="2" y1="10" x2="18" y2="10" stroke="#b8ff5c" stroke-width="1.5"/></svg>
+                <span style="font-family:'Archivo',sans-serif; font-weight:800; font-size:19px; letter-spacing:0.04em; color:#e9f5dc; text-transform:uppercase;">Dep<span style="color:#b8ff5c;">Vet</span></span>
+                <span style="font-family:'JetBrains Mono',monospace; font-size:10px; color:#6f8a4a; margin-left:14px; letter-spacing:0.12em;">● SCANNER ONLINE</span>
+              </div>
+              <div style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.22em; color:#ffb020; text-transform:uppercase; margin-bottom:16px;">[ supply-chain recon ]</div>
+              <h2 style="font-family:'Archivo',sans-serif; font-weight:800; font-size:50px; line-height:0.96; margin:0 0 18px; color:#eef5e4; letter-spacing:-0.025em; text-transform:uppercase;">Audit<br>before you<br>install.</h2>
+              <p style="font-size:14.5px; line-height:1.55; color:#93a883; margin:0 0 26px; max-width:430px;">Every dependency cross-checked against live vulnerability data, abandonment signals, typosquats, and malicious install-scripts. Threats surface on the scope. You get one verdict.</p>
+              <div style="background:rgba(184,255,92,0.04); border:1px solid rgba(184,255,92,0.2); border-radius:6px; padding:12px 14px; font-family:'JetBrains Mono',monospace; font-size:12px; color:#7c9a5c;"><span style="color:#ffb020;">&gt;</span> paste package.json to begin recon<span style="border-left:7px solid #b8ff5c; margin-left:4px; animation:dv-flicker 1s steps(1) infinite;"></span></div>
+              <div style="display:flex; align-items:center; gap:16px; margin-top:16px;">
+                <button style="font-family:'Archivo',sans-serif; font-weight:700; font-size:14px; letter-spacing:0.04em; text-transform:uppercase; color:#0a0c07; background:#b8ff5c; border:none; padding:13px 24px; border-radius:6px; cursor:pointer; box-shadow:0 0 30px -6px rgba(184,255,92,0.55);">Initiate scan</button>
+                <a style="font-family:'JetBrains Mono',monospace; font-size:13px; color:#ffb020; text-decoration:none; border-bottom:1px dashed rgba(255,176,32,0.45); padding-bottom:2px; cursor:pointer;">load example target</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- B · REPORT -->
+        <div style="width:1120px; max-width:100%; border-radius:14px; overflow:hidden; box-shadow:0 30px 70px -30px rgba(8,12,6,0.6); border:1px solid #d4d4d8;">
+          <div style="height:34px; background:#0a0f08; display:flex; align-items:center; gap:7px; padding:0 14px; border-bottom:1px solid rgba(184,255,92,0.10);">
+            <span style="width:10px;height:10px;border-radius:50%;background:#243018;"></span><span style="width:10px;height:10px;border-radius:50%;background:#243018;"></span><span style="width:10px;height:10px;border-radius:50%;background:#243018;"></span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#4a5a38; margin-left:14px;">depvet.dev/r/8f2a</span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:10px; color:#566; margin-left:auto; letter-spacing:0.12em;">REPORT</span>
+          </div>
+          <div style="position:relative; height:640px; background:#080c06; display:flex; flex-direction:column;">
+            <div style="position:absolute; inset:0; background-image:linear-gradient(rgba(184,255,92,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(184,255,92,0.04) 1px, transparent 1px); background-size:38px 38px;"></div>
+            <!-- verdict bar -->
+            <div style="position:relative; display:flex; align-items:center; gap:24px; padding:22px 30px; border-bottom:1px solid rgba(184,255,92,0.14); background:rgba(255,69,48,0.05);">
+              <svg width="40" height="40" viewBox="0 0 40 40"><polygon points="20,4 36,32 4,32" fill="none" stroke="#ff4530" stroke-width="2.5" stroke-linejoin="round"/><rect x="18.5" y="14" width="3" height="11" fill="#ff4530"/><rect x="18.5" y="27" width="3" height="3" fill="#ff4530"/></svg>
+              <div>
+                <div style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.22em; color:#8a6a3a; text-transform:uppercase; margin-bottom:3px;">Verdict · threat level</div>
+                <div style="font-family:'Archivo',sans-serif; font-weight:800; font-size:30px; color:#ff5a48; text-transform:uppercase; letter-spacing:-0.01em; line-height:1;">Action required</div>
+              </div>
+              <div style="margin-left:auto; display:flex; gap:26px; font-family:'JetBrains Mono',monospace; text-align:right;">
+                <div><div style="font-size:26px; color:#ff5a48; font-weight:600;">02</div><div style="font-size:9px; color:#7a6; letter-spacing:0.15em;">CRITICAL</div></div>
+                <div><div style="font-size:26px; color:#ffb020; font-weight:600;">03</div><div style="font-size:9px; color:#7a6; letter-spacing:0.15em;">WARNING</div></div>
+                <div><div style="font-size:26px; color:#b8ff5c; font-weight:600;">41</div><div style="font-size:9px; color:#7a6; letter-spacing:0.15em;">HEALTHY</div></div>
+              </div>
+            </div>
+            <div style="position:relative; flex:1; display:flex;">
+              <!-- scope -->
+              <div style="width:430px; position:relative; border-right:1px solid rgba(184,255,92,0.12); display:flex; align-items:center; justify-content:center;">
+                <div style="position:relative; width:330px; height:330px; border-radius:50%; overflow:hidden; border:1px solid rgba(184,255,92,0.22); box-shadow:inset 0 0 50px rgba(184,255,92,0.06);">
+                  <div style="position:absolute; left:50%; top:50%; width:50%; height:50%; transform-origin:0 0; background:conic-gradient(from 0deg, rgba(184,255,92,0.3), rgba(184,255,92,0) 60deg); animation:dv-sweep 4s linear infinite;"></div>
+                  <svg viewBox="0 0 330 330" style="position:absolute; inset:0;">
+                    <circle cx="165" cy="165" r="50" fill="none" stroke="rgba(184,255,92,0.15)"/><circle cx="165" cy="165" r="95" fill="none" stroke="rgba(184,255,92,0.12)"/><circle cx="165" cy="165" r="140" fill="none" stroke="rgba(184,255,92,0.1)"/>
+                    <line x1="165" y1="20" x2="165" y2="310" stroke="rgba(184,255,92,0.1)"/><line x1="20" y1="165" x2="310" y2="165" stroke="rgba(184,255,92,0.1)"/>
+                    <circle cx="165" cy="165" r="5" fill="#b8ff5c"/>
+                    <circle cx="230" cy="110" r="3.5" fill="#b8ff5c"/><circle cx="100" cy="210" r="3.5" fill="#b8ff5c"/><circle cx="220" cy="230" r="3.5" fill="#b8ff5c"/><circle cx="110" cy="110" r="3.5" fill="#b8ff5c"/><circle cx="250" cy="180" r="3.5" fill="#b8ff5c"/>
+                    <polygon points="125,250 132,263 118,263" fill="#ffb020"/><polygon points="240,255 247,268 233,268" fill="#ffb020"/>
+                    <g style="animation:dv-pulse 1.6s infinite;"><rect x="195" y="73" width="13" height="13" transform="rotate(45 201 79)" fill="#ff4530"/><circle cx="201" cy="79" r="16" fill="none" stroke="#ff4530" stroke-width="1.5" opacity="0.5"/></g>
+                    <g style="animation:dv-pulse 2s infinite;"><rect x="83" y="158" width="12" height="12" transform="rotate(45 89 164)" fill="#ff4530"/></g>
+                  </svg>
+                  <div style="position:absolute; inset:0; background:repeating-linear-gradient(transparent, transparent 3px, rgba(0,0,0,0.16) 4px);"></div>
+                </div>
+              </div>
+              <!-- telemetry / fixes -->
+              <div style="flex:1; padding:22px 26px; overflow:hidden;">
+                <div style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.2em; color:#ffb020; text-transform:uppercase; margin-bottom:14px;">▸ Neutralize first</div>
+                <div style="display:flex; flex-direction:column; gap:9px;">
+                  <div style="display:flex; align-items:center; gap:12px; background:rgba(255,69,48,0.07); border:1px solid rgba(255,69,48,0.28); border-radius:5px; padding:11px 14px;">
+                    <span style="width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-bottom:11px solid #ff4530;transform:rotate(45deg);flex-shrink:0;"></span>
+                    <div style="flex:1;"><span style="font-family:'JetBrains Mono',monospace; font-size:13px; color:#ffc7bf; font-weight:600;">lodash@4.17.11</span><div style="font-size:12px; color:#a98; margin-top:2px;">Prototype pollution · CVE-2019-10744</div></div>
+                    <span style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#b8ff5c; white-space:nowrap;">→ 4.17.21</span>
+                  </div>
+                  <div style="display:flex; align-items:center; gap:12px; background:rgba(255,69,48,0.07); border:1px solid rgba(255,69,48,0.28); border-radius:5px; padding:11px 14px;">
+                    <span style="width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-bottom:11px solid #ff4530;transform:rotate(45deg);flex-shrink:0;"></span>
+                    <div style="flex:1;"><span style="font-family:'JetBrains Mono',monospace; font-size:13px; color:#ffc7bf; font-weight:600;">minimist@1.2.0</span><div style="font-size:12px; color:#a98; margin-top:2px;">Argument injection · CVE-2021-44906</div></div>
+                    <span style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#b8ff5c; white-space:nowrap;">→ 1.2.8</span>
+                  </div>
+                  <div style="display:flex; align-items:center; gap:12px; background:rgba(255,176,32,0.06); border:1px solid rgba(255,176,32,0.26); border-radius:5px; padding:11px 14px;">
+                    <span style="width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-bottom:11px solid #ffb020;flex-shrink:0;"></span>
+                    <div style="flex:1;"><span style="font-family:'JetBrains Mono',monospace; font-size:13px; color:#f4d49a; font-weight:600;">moment@2.18.1</span><div style="font-size:12px; color:#9a8; margin-top:2px;">Unmaintained · last publish 3.1 yrs ago</div></div>
+                    <span style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#b8ff5c; white-space:nowrap;">→ day.js</span>
+                  </div>
+                </div>
+                <div style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.2em; color:#5d7340; text-transform:uppercase; margin:18px 0 10px;">▸ Manifest feed</div>
+                <div style="font-family:'JetBrains Mono',monospace; font-size:11.5px; line-height:1.9; color:#6f8a4a;">
+                  <div>react@18.2.0 <span style="color:#b8ff5c;">✓ clean</span></div>
+                  <div>express@4.18.2 <span style="color:#b8ff5c;">✓ clean</span></div>
+                  <div>axios@0.21.1 <span style="color:#ffb020;">△ outdated</span></div>
+                  <div style="opacity:0.5;">…40 more</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+    <!-- ============ CONCEPT C — FORENSIC ============ -->
+    <section>
+      <div style="display:flex; align-items:baseline; gap:18px; margin-bottom:6px;">
+        <div style="font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:600; letter-spacing:0.16em; color:#0b0a0d; background:#9b8cff; padding:4px 9px; border-radius:3px; white-space:nowrap;">CONCEPT C</div>
+        <h2 style="font-family:'JetBrains Mono',monospace; font-weight:700; font-size:26px; margin:0; letter-spacing:-0.01em; text-transform:uppercase;">Forensic</h2>
+      </div>
+      <p style="font-size:14px; color:#56565c; margin:0 0 26px; max-width:720px; line-height:1.5;">A single mono voice — an evidence lab under UV light. The dependency graph is a scattered constellation; risky packages are circled like evidence markers, and the scan develops the field like a film negative. Cold, clinical, exacting. Built for the demo where every catch lands as a discovery.</p>
+
+      <div style="display:flex; gap:28px; flex-wrap:wrap;">
+
+        <!-- C · LANDING -->
+        <div style="width:1120px; max-width:100%; border-radius:14px; overflow:hidden; box-shadow:0 30px 70px -30px rgba(11,10,13,0.6); border:1px solid #d4d4d8;">
+          <div style="height:34px; background:#100f14; display:flex; align-items:center; gap:7px; padding:0 14px; border-bottom:1px solid rgba(155,140,255,0.12);">
+            <span style="width:10px;height:10px;border-radius:50%;background:#2a2833;"></span><span style="width:10px;height:10px;border-radius:50%;background:#2a2833;"></span><span style="width:10px;height:10px;border-radius:50%;background:#2a2833;"></span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#544f63; margin-left:14px;">depvet.dev</span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:10px; color:#566; margin-left:auto; letter-spacing:0.12em;">LANDING</span>
+          </div>
+          <div style="position:relative; height:640px; background:radial-gradient(130% 100% at 85% 15%, #16131f 0%, #0c0b10 55%, #08070b 100%); overflow:hidden;">
+            <!-- constellation -->
+            <svg viewBox="0 0 540 640" style="position:absolute; right:0; top:0; width:600px; height:640px; opacity:0.92;">
+              <g stroke="rgba(155,140,255,0.18)" stroke-width="1">
+                <line x1="380" y1="180" x2="300" y2="120"/><line x1="380" y1="180" x2="460" y2="240"/><line x1="380" y1="180" x2="420" y2="340"/>
+                <line x1="420" y1="340" x2="340" y2="430"/><line x1="420" y1="340" x2="510" y2="400"/><line x1="300" y1="120" x2="220" y2="90"/>
+                <line x1="460" y1="240" x2="540" y2="180"/><line x1="340" y1="430" x2="300" y2="540"/><line x1="510" y1="400" x2="500" y2="520"/>
+                <line x1="220" y1="90" x2="160" y2="200"/><line x1="160" y1="200" x2="240" y2="280"/><line x1="240" y1="280" x2="340" y2="430"/>
+              </g>
+              <circle cx="300" cy="120" r="4" fill="#5fe0a0"/><circle cx="460" cy="240" r="4" fill="#5fe0a0"/><circle cx="540" cy="180" r="3.5" fill="#5fe0a0"/>
+              <circle cx="220" cy="90" r="3.5" fill="#5fe0a0"/><circle cx="160" cy="200" r="4" fill="#5fe0a0"/><circle cx="240" cy="280" r="4" fill="#5fe0a0"/>
+              <circle cx="510" cy="400" r="3.5" fill="#5fe0a0"/><circle cx="500" cy="520" r="3.5" fill="#5fe0a0"/><circle cx="300" cy="540" r="3.5" fill="#5fe0a0"/>
+              <!-- evidence-circled risks -->
+              <g style="animation:dv-pulse 2.4s infinite;"><rect x="374" y="174" width="12" height="12" transform="rotate(45 380 180)" fill="#ff3d77"/><circle cx="380" cy="180" r="22" fill="none" stroke="#ff3d77" stroke-width="1" stroke-dasharray="3 4"/></g>
+              <g style="animation:dv-pulse 2.8s infinite;"><rect x="414" y="334" width="12" height="12" transform="rotate(45 420 340)" fill="#ff3d77"/><circle cx="420" cy="340" r="22" fill="none" stroke="#ff3d77" stroke-width="1" stroke-dasharray="3 4"/></g>
+              <polygon points="340,422 348,436 332,436" fill="#ffb020"/>
+            </svg>
+            <!-- copy -->
+            <div style="position:relative; padding:56px 56px; max-width:560px; height:100%; display:flex; flex-direction:column;">
+              <div style="display:flex; align-items:center; gap:11px;">
+                <svg width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8.5" fill="none" stroke="#9b8cff" stroke-width="1.5"/><circle cx="10" cy="10" r="2" fill="#9b8cff"/><line x1="10" y1="1.5" x2="10" y2="5" stroke="#9b8cff" stroke-width="1.5"/><line x1="10" y1="15" x2="10" y2="18.5" stroke="#9b8cff" stroke-width="1.5"/><line x1="1.5" y1="10" x2="5" y2="10" stroke="#9b8cff" stroke-width="1.5"/><line x1="15" y1="10" x2="18.5" y2="10" stroke="#9b8cff" stroke-width="1.5"/></svg>
+                <span style="font-family:'JetBrains Mono',monospace; font-weight:700; font-size:17px; letter-spacing:0.06em; color:#ece9f6;">DEP<span style="color:#9b8cff;">VET</span></span>
+              </div>
+              <div style="margin-top:auto;"></div>
+              <div style="display:inline-flex; align-items:center; gap:8px; font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.18em; color:#9b8cff; text-transform:uppercase; margin-bottom:18px;"><span style="border:1px solid #9b8cff; padding:2px 6px; border-radius:2px; white-space:nowrap;">CASE FILE</span> supply-chain forensics</div>
+              <h2 style="font-family:'JetBrains Mono',monospace; font-weight:700; font-size:42px; line-height:1.04; margin:0 0 20px; color:#f1eefb; letter-spacing:-0.03em; text-transform:uppercase;">Every package<br>is a suspect.</h2>
+              <p style="font-family:'JetBrains Mono',monospace; font-size:13px; line-height:1.7; color:#8f8aa3; margin:0 0 28px; max-width:430px;">Paste your manifest and we run it under the light — CVE records, abandonment, typosquats, install-script behavior. Nothing leaves your browser. Verdict in seconds.</p>
+              <div style="border:1px dashed rgba(155,140,255,0.35); border-radius:6px; padding:16px; background:rgba(155,140,255,0.04);">
+                <div style="font-family:'JetBrains Mono',monospace; font-size:10px; color:#6a647d; letter-spacing:0.14em; margin-bottom:10px;">▼ DROP EVIDENCE — package.json</div>
+                <div style="font-family:'JetBrains Mono',monospace; font-size:12px; color:#4f4a60;">{ "name": "your-app", "dependencies": { … } }</div>
+              </div>
+              <div style="display:flex; align-items:center; gap:18px; margin-top:18px;">
+                <button style="font-family:'JetBrains Mono',monospace; font-weight:600; font-size:13px; letter-spacing:0.06em; text-transform:uppercase; color:#0b0a0d; background:#9b8cff; border:none; padding:13px 24px; border-radius:6px; cursor:pointer; box-shadow:0 0 30px -6px rgba(155,140,255,0.5);">Examine →</button>
+                <a style="font-family:'JetBrains Mono',monospace; font-size:12px; color:#bdb4ff; text-decoration:none; border-bottom:1px dashed rgba(189,180,255,0.4); padding-bottom:2px; cursor:pointer;">open sample case</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- C · REPORT -->
+        <div style="width:1120px; max-width:100%; border-radius:14px; overflow:hidden; box-shadow:0 30px 70px -30px rgba(11,10,13,0.6); border:1px solid #d4d4d8;">
+          <div style="height:34px; background:#100f14; display:flex; align-items:center; gap:7px; padding:0 14px; border-bottom:1px solid rgba(155,140,255,0.12);">
+            <span style="width:10px;height:10px;border-radius:50%;background:#2a2833;"></span><span style="width:10px;height:10px;border-radius:50%;background:#2a2833;"></span><span style="width:10px;height:10px;border-radius:50%;background:#2a2833;"></span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#544f63; margin-left:14px;">depvet.dev/r/8f2a</span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:10px; color:#566; margin-left:auto; letter-spacing:0.12em;">REPORT</span>
+          </div>
+          <div style="position:relative; height:640px; background:radial-gradient(120% 90% at 70% 40%, #15121d 0%, #0c0b10 55%, #08070b 100%); display:flex;">
+            <!-- constellation evidence board -->
+            <div style="flex:1; position:relative; overflow:hidden; border-right:1px solid rgba(155,140,255,0.12);">
+              <div style="position:absolute; inset:0; background:repeating-linear-gradient(0deg, transparent, transparent 5px, rgba(155,140,255,0.025) 6px);"></div>
+              <div style="position:absolute; left:0; right:0; height:2px; background:linear-gradient(90deg, transparent, #9b8cff, transparent); box-shadow:0 0 16px 2px rgba(155,140,255,0.6); animation:dv-scanline 4.5s ease-in-out infinite;"></div>
+              <svg viewBox="0 0 600 600" style="position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); width:600px; height:600px;">
+                <g stroke="rgba(155,140,255,0.16)" stroke-width="1">
+                  <line x1="300" y1="300" x2="200" y2="180"/><line x1="300" y1="300" x2="420" y2="200"/><line x1="300" y1="300" x2="180" y2="420"/><line x1="300" y1="300" x2="430" y2="400"/>
+                  <line x1="200" y1="180" x2="110" y2="120"/><line x1="420" y1="200" x2="510" y2="140"/><line x1="180" y1="420" x2="130" y2="520"/><line x1="430" y1="400" x2="520" y2="470"/>
+                  <line x1="420" y1="200" x2="480" y2="310"/><line x1="200" y1="180" x2="250" y2="90"/><line x1="180" y1="420" x2="290" y2="470"/><line x1="430" y1="400" x2="380" y2="500"/>
+                </g>
+                <circle cx="300" cy="300" r="14" fill="#0c0b10" stroke="#bdb4ff" stroke-width="2"/>
+                <circle cx="110" cy="120" r="5" fill="#5fe0a0"/><circle cx="510" cy="140" r="5" fill="#5fe0a0"/><circle cx="480" cy="310" r="5" fill="#5fe0a0"/><circle cx="250" cy="90" r="4.5" fill="#5fe0a0"/><circle cx="130" cy="520" r="5" fill="#5fe0a0"/><circle cx="520" cy="470" r="4.5" fill="#5fe0a0"/><circle cx="380" cy="500" r="4.5" fill="#5fe0a0"/>
+                <polygon points="180,412 188,427 172,427" fill="#ffb020"/><polygon points="430,392 438,407 422,407" fill="#ffb020"/>
+                <g style="animation:dv-pulse 2s infinite;"><rect x="194" y="174" width="14" height="14" transform="rotate(45 201 181)" fill="#ff3d77"/><circle cx="201" cy="181" r="26" fill="none" stroke="#ff3d77" stroke-width="1" stroke-dasharray="3 5"/></g>
+                <g style="animation:dv-pulse 2.5s infinite;"><rect x="414" y="194" width="13" height="13" transform="rotate(45 420 200)" fill="#ff3d77"/><circle cx="420" cy="200" r="24" fill="none" stroke="#ff3d77" stroke-width="1" stroke-dasharray="3 5"/></g>
+              </svg>
+              <div style="position:absolute; top:18px; left:22px; font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.16em; color:#6a647d; text-transform:uppercase;">EXHIBIT · 46 nodes</div>
+              <!-- caught callout -->
+              <div style="position:absolute; left:42px; bottom:40px; max-width:300px; background:rgba(255,61,119,0.1); border:1px solid rgba(255,61,119,0.4); border-radius:8px; padding:13px 15px; backdrop-filter:blur(4px);">
+                <div style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.16em; color:#ff7aa3; text-transform:uppercase; margin-bottom:6px;">⚑ CAUGHT</div>
+                <div style="font-family:'JetBrains Mono',monospace; font-size:13px; color:#ffd4e1; font-weight:600;">colorz@1.4.0</div>
+                <div style="font-family:'JetBrains Mono',monospace; font-size:11.5px; color:#cf9caf; line-height:1.5; margin-top:4px;">Typosquat of <span style="color:#fff;">colors</span> · ships a postinstall script. Not in your lockfile yesterday.</div>
+              </div>
+            </div>
+            <!-- verdict + fixes -->
+            <div style="width:420px; padding:30px 28px; display:flex; flex-direction:column;">
+              <div style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.2em; color:#6a647d; text-transform:uppercase; margin-bottom:12px;">Verdict</div>
+              <div style="border:1px solid rgba(255,61,119,0.4); border-radius:8px; padding:16px; background:rgba(255,61,119,0.06); margin-bottom:22px;">
+                <div style="display:flex; align-items:center; gap:12px;">
+                  <svg width="30" height="30" viewBox="0 0 30 30"><rect x="5" y="5" width="20" height="20" rx="2" transform="rotate(45 15 15)" fill="none" stroke="#ff3d77" stroke-width="2.2"/><rect x="13.7" y="9" width="2.6" height="9" fill="#ff3d77"/><rect x="13.7" y="20" width="2.6" height="2.6" fill="#ff3d77"/></svg>
+                  <div><div style="font-family:'JetBrains Mono',monospace; font-weight:700; font-size:22px; color:#ff5a8c; text-transform:uppercase; letter-spacing:-0.01em;">Compromised</div><div style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#a98; margin-top:2px;">do not ship · 1 active threat</div></div>
+                </div>
+              </div>
+              <div style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.2em; color:#6a647d; text-transform:uppercase; margin-bottom:12px;">Fix these first</div>
+              <div style="display:flex; flex-direction:column; gap:10px;">
+                <div style="background:rgba(255,61,119,0.07); border:1px solid rgba(255,61,119,0.3); border-radius:7px; padding:12px 13px;">
+                  <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;"><span style="width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-bottom:10px solid #ff3d77;transform:rotate(45deg);"></span><span style="font-family:'JetBrains Mono',monospace; font-size:13px; color:#ffd4e1; font-weight:600;">colorz@1.4.0</span></div>
+                  <div style="font-family:'JetBrains Mono',monospace; font-size:11.5px; color:#cf9caf; line-height:1.45;">Remove now. Typosquat + postinstall payload.</div>
+                </div>
+                <div style="background:rgba(255,61,119,0.07); border:1px solid rgba(255,61,119,0.3); border-radius:7px; padding:12px 13px;">
+                  <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;"><span style="width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-bottom:10px solid #ff3d77;transform:rotate(45deg);"></span><span style="font-family:'JetBrains Mono',monospace; font-size:13px; color:#ffd4e1; font-weight:600;">lodash@4.17.11</span></div>
+                  <div style="font-family:'JetBrains Mono',monospace; font-size:11.5px; color:#cf9caf; line-height:1.45;">Prototype pollution → bump to 4.17.21.</div>
+                </div>
+                <div style="background:rgba(255,176,32,0.06); border:1px solid rgba(255,176,32,0.28); border-radius:7px; padding:12px 13px;">
+                  <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;"><span style="width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-bottom:10px solid #ffb020;"></span><span style="font-family:'JetBrains Mono',monospace; font-size:13px; color:#f4d49a; font-weight:600;">moment@2.18.1</span></div>
+                  <div style="font-family:'JetBrains Mono',monospace; font-size:11.5px; color:#c9b88f; line-height:1.45;">Abandoned → migrate to day.js.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+    <!-- MORE -->
+  </div>
+
+</div>
+</x-dc>
+</body>
+</html>

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Archivo:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin:0; padding:0; background:#070a05; }
+  @keyframes ds-sweep { to { transform: rotate(360deg); } }
+  @keyframes ds-pulse { 0%,100% { opacity:.4; } 50% { opacity:1; } }
+</style>
+</helmet>
+<div style="position:relative; min-height:100vh; background:#080c06; color:#eef5e4; font-family:'JetBrains Mono',monospace; padding:0 0 100px;">
+  <div style="position:fixed; inset:0; pointer-events:none; background-image:linear-gradient(rgba(184,255,92,0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(184,255,92,0.035) 1px, transparent 1px); background-size:42px 42px;"></div>
+  <div style="position:fixed; inset:0; pointer-events:none; background:radial-gradient(100% 80% at 80% 0%, rgba(184,255,92,0.05), transparent 55%);"></div>
+
+  <div style="position:relative; max-width:1180px; margin:0 auto; padding:0 48px;">
+
+    <!-- header -->
+    <div style="padding:56px 0 36px; border-bottom:1px solid rgba(184,255,92,0.12); margin-bottom:48px;">
+      <div style="font-size:11px; letter-spacing:0.26em; color:#ffb020; text-transform:uppercase; margin-bottom:18px;">[ design system · v0.9 · engineering handoff ]</div>
+      <h1 style="font-family:'Archivo',sans-serif; font-weight:900; font-size:46px; margin:0 0 14px; letter-spacing:-0.03em; text-transform:uppercase;">DepVet system</h1>
+      <p style="font-family:'Space Grotesk',sans-serif; font-size:15px; line-height:1.6; color:#93a883; max-width:600px; margin:0;">Tokens, identity, and motion for the Mission Control direction. Dark-first, phosphor-CRT, instrument-grade. Built for React + Tailwind — every value below maps to a CSS variable or utility.</p>
+    </div>
+
+    <!-- IDENTITY -->
+    <div style="margin-bottom:64px;">
+      <div style="font-size:10px; letter-spacing:0.24em; color:#6f8a4a; text-transform:uppercase; margin-bottom:22px;">01 · Identity</div>
+      <div style="display:grid; grid-template-columns:1.2fr 1fr; gap:20px;">
+        <div style="background:rgba(10,16,8,0.6); border:1px solid rgba(184,255,92,0.14); border-radius:12px; padding:40px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:26px;">
+          <div style="display:flex; align-items:center; gap:14px;">
+            <svg width="40" height="40" viewBox="0 0 22 22"><rect x="2.5" y="2.5" width="17" height="17" rx="2.5" fill="none" stroke="#b8ff5c" stroke-width="1.6"/><line x1="11" y1="2.5" x2="11" y2="19.5" stroke="#b8ff5c" stroke-width="1.6"/><line x1="2.5" y1="11" x2="19.5" y2="11" stroke="#b8ff5c" stroke-width="1.6"/><circle cx="11" cy="11" r="2.4" fill="#b8ff5c"/></svg>
+            <span style="font-family:'Archivo',sans-serif; font-weight:800; font-size:34px; letter-spacing:0.04em; text-transform:uppercase;">Dep<span style="color:#b8ff5c;">Vet</span></span>
+          </div>
+          <div style="font-size:11px; color:#6f8a4a; letter-spacing:0.14em;">PRIMARY LOCKUP · scope glyph + wordmark</div>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:20px;">
+          <div style="flex:1; background:#b8ff5c; border-radius:12px; padding:22px; display:flex; align-items:center; gap:11px;">
+            <svg width="22" height="22" viewBox="0 0 22 22"><rect x="2.5" y="2.5" width="17" height="17" rx="2.5" fill="none" stroke="#0a0c07" stroke-width="1.8"/><line x1="11" y1="2.5" x2="11" y2="19.5" stroke="#0a0c07" stroke-width="1.8"/><line x1="2.5" y1="11" x2="19.5" y2="11" stroke="#0a0c07" stroke-width="1.8"/><circle cx="11" cy="11" r="2.4" fill="#0a0c07"/></svg>
+            <span style="font-family:'Archivo',sans-serif; font-weight:800; font-size:20px; letter-spacing:0.04em; text-transform:uppercase; color:#0a0c07;">DepVet</span>
+          </div>
+          <div style="flex:1; background:rgba(10,16,8,0.6); border:1px solid rgba(184,255,92,0.14); border-radius:12px; padding:22px; display:flex; align-items:center; justify-content:center;">
+            <svg width="40" height="40" viewBox="0 0 22 22"><rect x="2.5" y="2.5" width="17" height="17" rx="2.5" fill="none" stroke="#b8ff5c" stroke-width="1.6"/><line x1="11" y1="2.5" x2="11" y2="19.5" stroke="#b8ff5c" stroke-width="1.6"/><line x1="2.5" y1="11" x2="19.5" y2="11" stroke="#b8ff5c" stroke-width="1.6"/><circle cx="11" cy="11" r="2.4" fill="#b8ff5c"/></svg>
+            <span style="font-size:10px; color:#6f8a4a; letter-spacing:0.14em; margin-left:14px;">APP ICON / GLYPH ONLY</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- COLOR -->
+    <div style="margin-bottom:64px;">
+      <div style="font-size:10px; letter-spacing:0.24em; color:#6f8a4a; text-transform:uppercase; margin-bottom:22px;">02 · Color tokens</div>
+      <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:14px;">
+        <div style="border:1px solid rgba(184,255,92,0.14); border-radius:10px; overflow:hidden;"><div style="height:78px; background:#080c06; border-bottom:1px solid rgba(184,255,92,0.14);"></div><div style="padding:11px 13px;"><div style="font-size:12px; color:#cfe6b0;">--bg</div><div style="font-size:11px; color:#6f8a4a; margin-top:3px;">#080C06</div></div></div>
+        <div style="border:1px solid rgba(184,255,92,0.14); border-radius:10px; overflow:hidden;"><div style="height:78px; background:#0b1009; border-bottom:1px solid rgba(184,255,92,0.14);"></div><div style="padding:11px 13px;"><div style="font-size:12px; color:#cfe6b0;">--surface</div><div style="font-size:11px; color:#6f8a4a; margin-top:3px;">#0B1009</div></div></div>
+        <div style="border:1px solid rgba(184,255,92,0.14); border-radius:10px; overflow:hidden;"><div style="height:78px; background:#101810; border-bottom:1px solid rgba(184,255,92,0.14);"></div><div style="padding:11px 13px;"><div style="font-size:12px; color:#cfe6b0;">--surface-2</div><div style="font-size:11px; color:#6f8a4a; margin-top:3px;">#101810</div></div></div>
+        <div style="border:1px solid rgba(184,255,92,0.14); border-radius:10px; overflow:hidden;"><div style="height:78px; background:linear-gradient(135deg,#080c06,#0b1009); border-bottom:1px solid rgba(184,255,92,0.14); position:relative;"><div style="position:absolute; inset:0; background-image:linear-gradient(rgba(184,255,92,0.12) 1px,transparent 1px),linear-gradient(90deg,rgba(184,255,92,0.12) 1px,transparent 1px); background-size:14px 14px;"></div></div><div style="padding:11px 13px;"><div style="font-size:12px; color:#cfe6b0;">--grid-line</div><div style="font-size:11px; color:#6f8a4a; margin-top:3px;">phosphor 3.8%</div></div></div>
+      </div>
+      <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:14px;">
+        <div style="border:1px solid rgba(184,255,92,0.14); border-radius:10px; overflow:hidden;"><div style="height:78px; background:#b8ff5c; border-bottom:1px solid rgba(184,255,92,0.14);"></div><div style="padding:11px 13px;"><div style="font-size:12px; color:#cfe6b0;">--phosphor</div><div style="font-size:11px; color:#6f8a4a; margin-top:3px;">#B8FF5C · primary</div></div></div>
+        <div style="border:1px solid rgba(184,255,92,0.14); border-radius:10px; overflow:hidden;"><div style="height:78px; background:#6f8a4a; border-bottom:1px solid rgba(184,255,92,0.14);"></div><div style="padding:11px 13px;"><div style="font-size:12px; color:#cfe6b0;">--phosphor-dim</div><div style="font-size:11px; color:#6f8a4a; margin-top:3px;">#6F8A4A</div></div></div>
+        <div style="border:1px solid rgba(184,255,92,0.14); border-radius:10px; overflow:hidden;"><div style="height:78px; background:#ffb020; border-bottom:1px solid rgba(184,255,92,0.14);"></div><div style="padding:11px 13px;"><div style="font-size:12px; color:#cfe6b0;">--amber</div><div style="font-size:11px; color:#6f8a4a; margin-top:3px;">#FFB020 · accent</div></div></div>
+        <div style="border:1px solid rgba(184,255,92,0.14); border-radius:10px; overflow:hidden;"><div style="height:78px; background:#ff4530; border-bottom:1px solid rgba(184,255,92,0.14);"></div><div style="padding:11px 13px;"><div style="font-size:12px; color:#cfe6b0;">--critical</div><div style="font-size:11px; color:#6f8a4a; margin-top:3px;">#FF4530</div></div></div>
+      </div>
+      <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:14px;">
+        <div style="border:1px solid rgba(184,255,92,0.14); border-radius:10px; overflow:hidden;"><div style="height:78px; background:#eef5e4; border-bottom:1px solid rgba(184,255,92,0.14);"></div><div style="padding:11px 13px;"><div style="font-size:12px; color:#cfe6b0;">--text-hi</div><div style="font-size:11px; color:#6f8a4a; margin-top:3px;">#EEF5E4</div></div></div>
+        <div style="border:1px solid rgba(184,255,92,0.14); border-radius:10px; overflow:hidden;"><div style="height:78px; background:#93a883; border-bottom:1px solid rgba(184,255,92,0.14);"></div><div style="padding:11px 13px;"><div style="font-size:12px; color:#cfe6b0;">--text-mid</div><div style="font-size:11px; color:#6f8a4a; margin-top:3px;">#93A883</div></div></div>
+        <div style="border:1px solid rgba(184,255,92,0.14); border-radius:10px; overflow:hidden;"><div style="height:78px; background:#5d7340; border-bottom:1px solid rgba(184,255,92,0.14);"></div><div style="padding:11px 13px;"><div style="font-size:12px; color:#cfe6b0;">--text-dim</div><div style="font-size:11px; color:#6f8a4a; margin-top:3px;">#5D7340</div></div></div>
+        <div style="border:1px solid rgba(184,255,92,0.14); border-radius:10px; overflow:hidden;"><div style="height:78px; background:#ff5a48; border-bottom:1px solid rgba(184,255,92,0.14);"></div><div style="padding:11px 13px;"><div style="font-size:12px; color:#cfe6b0;">--critical-text</div><div style="font-size:11px; color:#6f8a4a; margin-top:3px;">#FF5A48 · on dark</div></div></div>
+      </div>
+    </div>
+
+    <!-- RISK SIGNAL -->
+    <div style="margin-bottom:64px;">
+      <div style="font-size:10px; letter-spacing:0.24em; color:#6f8a4a; text-transform:uppercase; margin-bottom:6px;">03 · Risk-signal language</div>
+      <p style="font-family:'Space Grotesk',sans-serif; font-size:13px; color:#93a883; margin:0 0 22px; max-width:600px;">The loudest thing on screen. Encoded three ways — <span style="color:#cfe6b0;">color + shape + label</span> — so it survives color-blindness and grayscale. Never use color alone.</p>
+      <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:14px;">
+        <div style="background:rgba(255,69,48,0.06); border:1px solid rgba(255,69,48,0.3); border-radius:11px; padding:22px;">
+          <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px;"><span style="width:18px;height:18px;background:#ff4530;transform:rotate(45deg);display:inline-block;"></span><span style="font-family:'Archivo',sans-serif; font-weight:800; font-size:18px; color:#ff5a48; text-transform:uppercase;">Critical</span></div>
+          <div style="font-size:12px; color:#c79a92; line-height:1.7;">◆ diamond · #FF4530<br>CVEs (high/crit), typosquats, malicious install-scripts. Blocks the verdict.</div>
+        </div>
+        <div style="background:rgba(255,176,32,0.06); border:1px solid rgba(255,176,32,0.3); border-radius:11px; padding:22px;">
+          <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px;"><span style="width:0;height:0;border-left:9px solid transparent;border-right:9px solid transparent;border-bottom:16px solid #ffb020;display:inline-block;"></span><span style="font-family:'Archivo',sans-serif; font-weight:800; font-size:18px; color:#ffb020; text-transform:uppercase;">Warning</span></div>
+          <div style="font-size:12px; color:#c9b88f; line-height:1.7;">▲ triangle · #FFB020<br>Moderate CVEs, abandonment, outdated majors. Review before shipping.</div>
+        </div>
+        <div style="background:rgba(184,255,92,0.06); border:1px solid rgba(184,255,92,0.3); border-radius:11px; padding:22px;">
+          <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px;"><span style="width:17px;height:17px;border-radius:50%;background:#b8ff5c;display:inline-block;"></span><span style="font-family:'Archivo',sans-serif; font-weight:800; font-size:18px; color:#b8ff5c; text-transform:uppercase;">Healthy</span></div>
+          <div style="font-size:12px; color:#8aa06a; line-height:1.7;">● circle + ✓ · #B8FF5C<br>Current, maintained, no advisories. The quiet majority.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TYPE -->
+    <div style="margin-bottom:64px;">
+      <div style="font-size:10px; letter-spacing:0.24em; color:#6f8a4a; text-transform:uppercase; margin-bottom:22px;">04 · Type scale</div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+        <div style="background:rgba(10,16,8,0.6); border:1px solid rgba(184,255,92,0.14); border-radius:12px; padding:28px;">
+          <div style="font-size:10px; color:#6f8a4a; letter-spacing:0.16em; margin-bottom:18px;">DISPLAY · ARCHIVO 800–900 · UPPERCASE · -0.03em</div>
+          <div style="font-family:'Archivo',sans-serif; font-weight:900; font-size:42px; line-height:1; text-transform:uppercase; letter-spacing:-0.03em; margin-bottom:14px;">Audit</div>
+          <div style="font-family:'Archivo',sans-serif; font-weight:800; font-size:28px; line-height:1; text-transform:uppercase; letter-spacing:-0.02em; margin-bottom:14px; color:#cfe6b0;">Action required</div>
+          <div style="font-size:11px; color:#6f8a4a; line-height:1.9;">display-xl 52 · display-l 38 · verdict 30</div>
+        </div>
+        <div style="background:rgba(10,16,8,0.6); border:1px solid rgba(184,255,92,0.14); border-radius:12px; padding:28px;">
+          <div style="font-size:10px; color:#6f8a4a; letter-spacing:0.16em; margin-bottom:18px;">DATA / UI · JETBRAINS MONO</div>
+          <div style="font-size:16px; color:#cfe6b0; margin-bottom:8px;">lodash<span style="color:#5d7340;">@4.17.21</span></div>
+          <div style="font-size:13px; color:#93a883; margin-bottom:8px;">CVE-2019-10744 · HIGH (7.4)</div>
+          <div style="font-size:10px; color:#6f8a4a; letter-spacing:0.2em; text-transform:uppercase; margin-bottom:14px;">Weekly downloads</div>
+          <div style="font-size:11px; color:#6f8a4a; line-height:1.9;">row 13 · detail 12 · meta 11 · label 10 (0.16–0.24em)</div>
+        </div>
+      </div>
+      <div style="background:rgba(10,16,8,0.6); border:1px solid rgba(184,255,92,0.14); border-radius:12px; padding:22px 28px; margin-top:20px;">
+        <div style="font-size:10px; color:#6f8a4a; letter-spacing:0.16em; margin-bottom:12px;">BODY / PROSE · SPACE GROTESK 400</div>
+        <div style="font-family:'Space Grotesk',sans-serif; font-size:15px; line-height:1.6; color:#93a883; max-width:640px;">Used only for descriptive paragraphs on the landing and empty states — never for data. Keeps explanatory copy approachable while the mono carries all package, version, and advisory information.</div>
+      </div>
+    </div>
+
+    <!-- SPACING + RADIUS -->
+    <div style="margin-bottom:64px;">
+      <div style="font-size:10px; letter-spacing:0.24em; color:#6f8a4a; text-transform:uppercase; margin-bottom:22px;">05 · Spacing &amp; radius</div>
+      <div style="display:grid; grid-template-columns:1.4fr 1fr; gap:20px;">
+        <div style="background:rgba(10,16,8,0.6); border:1px solid rgba(184,255,92,0.14); border-radius:12px; padding:28px;">
+          <div style="font-size:10px; color:#6f8a4a; letter-spacing:0.16em; margin-bottom:20px;">4PX BASE GRID</div>
+          <div style="display:flex; align-items:flex-end; gap:14px;">
+            <div style="text-align:center;"><div style="width:8px; height:8px; background:#b8ff5c; margin:0 auto 8px;"></div><div style="font-size:10px; color:#6f8a4a;">8</div></div>
+            <div style="text-align:center;"><div style="width:12px; height:12px; background:#b8ff5c; margin:0 auto 8px;"></div><div style="font-size:10px; color:#6f8a4a;">12</div></div>
+            <div style="text-align:center;"><div style="width:16px; height:16px; background:#b8ff5c; margin:0 auto 8px;"></div><div style="font-size:10px; color:#6f8a4a;">16</div></div>
+            <div style="text-align:center;"><div style="width:24px; height:24px; background:#b8ff5c; margin:0 auto 8px;"></div><div style="font-size:10px; color:#6f8a4a;">24</div></div>
+            <div style="text-align:center;"><div style="width:30px; height:30px; background:#b8ff5c; margin:0 auto 8px;"></div><div style="font-size:10px; color:#6f8a4a;">30</div></div>
+            <div style="text-align:center;"><div style="width:40px; height:40px; background:#b8ff5c; margin:0 auto 8px;"></div><div style="font-size:10px; color:#6f8a4a;">40</div></div>
+            <div style="text-align:center;"><div style="width:56px; height:56px; background:#b8ff5c; margin:0 auto 8px;"></div><div style="font-size:10px; color:#6f8a4a;">56</div></div>
+          </div>
+        </div>
+        <div style="background:rgba(10,16,8,0.6); border:1px solid rgba(184,255,92,0.14); border-radius:12px; padding:28px;">
+          <div style="font-size:10px; color:#6f8a4a; letter-spacing:0.16em; margin-bottom:20px;">RADIUS</div>
+          <div style="display:flex; align-items:center; gap:16px;">
+            <div style="text-align:center;"><div style="width:46px; height:46px; border:1px solid #b8ff5c; border-radius:6px; margin-bottom:8px;"></div><div style="font-size:10px; color:#6f8a4a;">6 · ctrl</div></div>
+            <div style="text-align:center;"><div style="width:46px; height:46px; border:1px solid #b8ff5c; border-radius:9px; margin-bottom:8px;"></div><div style="font-size:10px; color:#6f8a4a;">9 · card</div></div>
+            <div style="text-align:center;"><div style="width:46px; height:46px; border:1px solid #b8ff5c; border-radius:50%; margin-bottom:8px;"></div><div style="font-size:10px; color:#6f8a4a;">scope</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MOTION -->
+    <div>
+      <div style="font-size:10px; letter-spacing:0.24em; color:#6f8a4a; text-transform:uppercase; margin-bottom:6px;">06 · Motion</div>
+      <p style="font-family:'Space Grotesk',sans-serif; font-size:13px; color:#93a883; margin:0 0 22px; max-width:600px;">Purposeful, never decorative. The radar sweep is the system's heartbeat; everything else reports an event.</p>
+      <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:14px;">
+        <div style="display:flex; align-items:center; gap:18px; background:rgba(10,16,8,0.6); border:1px solid rgba(184,255,92,0.14); border-radius:11px; padding:18px 22px;">
+          <div style="position:relative; width:54px; height:54px; flex-shrink:0; border-radius:50%; overflow:hidden; border:1px solid rgba(184,255,92,0.3);"><div style="position:absolute; left:50%; top:50%; width:50%; height:50%; transform-origin:0 0; background:conic-gradient(from 0deg, rgba(184,255,92,0.5), transparent 70deg); animation:ds-sweep 2.4s linear infinite;"></div></div>
+          <div><div style="font-size:13px; color:#cfe6b0;">Radar sweep</div><div style="font-size:11px; color:#6f8a4a; margin-top:3px;">2.4s scan · 4.5–6s idle · linear</div></div>
+        </div>
+        <div style="display:flex; align-items:center; gap:18px; background:rgba(10,16,8,0.6); border:1px solid rgba(184,255,92,0.14); border-radius:11px; padding:18px 22px;">
+          <div style="width:54px; height:54px; flex-shrink:0; display:flex; align-items:center; justify-content:center;"><span style="width:18px;height:18px;background:#ff4530;transform:rotate(45deg);display:inline-block; animation:ds-pulse 1.7s infinite;"></span></div>
+          <div><div style="font-size:13px; color:#cfe6b0;">Risk ignite + pulse</div><div style="font-size:11px; color:#6f8a4a; margin-top:3px;">ignite .6s on reveal · pulse 1.7–3s</div></div>
+        </div>
+        <div style="display:flex; align-items:center; gap:18px; background:rgba(10,16,8,0.6); border:1px solid rgba(184,255,92,0.14); border-radius:11px; padding:18px 22px;">
+          <div style="width:54px; height:54px; flex-shrink:0; display:flex; align-items:center; justify-content:center;"><span style="width:12px;height:12px;border-radius:50%;background:#b8ff5c;display:inline-block; animation:ds-pulse 1.2s infinite;"></span></div>
+          <div><div style="font-size:13px; color:#cfe6b0;">Node blip</div><div style="font-size:11px; color:#6f8a4a; margin-top:3px;">.5s resolve · staggered during scan</div></div>
+        </div>
+        <div style="display:flex; align-items:center; gap:18px; background:rgba(10,16,8,0.6); border:1px solid rgba(184,255,92,0.14); border-radius:11px; padding:18px 22px;">
+          <div style="position:relative; width:54px; height:54px; flex-shrink:0; overflow:hidden; border:1px solid rgba(184,255,92,0.2); border-radius:6px;"><div style="position:absolute; left:0; right:0; height:2px; background:linear-gradient(90deg,transparent,#b8ff5c,transparent); top:20%;"></div></div>
+          <div><div style="font-size:13px; color:#cfe6b0;">Scan line</div><div style="font-size:11px; color:#6f8a4a; margin-top:3px;">4s ease · report scope overlay</div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+</body>
+</html>
