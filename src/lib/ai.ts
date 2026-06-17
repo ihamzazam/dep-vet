@@ -13,6 +13,7 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { zodOutputFormat } from "@anthropic-ai/sdk/helpers/zod";
 import { z } from "zod";
+import { pendoTrack } from "./pendo";
 import type { PackageFinding } from "./types";
 
 // The user's spec (handoff) explicitly names the "claude-sonnet" family; this
@@ -80,6 +81,14 @@ export async function enrichFlagged(
     for (const n of parsed.perPackageNotes) {
       if (n.package && n.note) notes.set(n.package, n.note);
     }
+
+    pendoTrack("ai_enrichment_completed", {
+      packages_enriched_count: flagged.length,
+      priorities_count: priorities.size,
+      notes_count: notes.size,
+      model_used: MODEL,
+    });
+
     return { priorities, notes };
   } catch {
     return null; // fail open
