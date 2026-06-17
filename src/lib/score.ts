@@ -22,8 +22,11 @@ import { compactDownloads, humanizeDownloads, monthsSince, relativeTime } from "
 import { gt as semverGt } from "semver";
 
 const LOW_DOWNLOADS = 50_000;
-const VERY_HIGH_DOWNLOADS = 5_000_000;
 const ABANDON_MONTHS = 24;
+// NOTE: the handoff also lists a "bus-factor" rule (1 maintainer + very high
+// downloads) as YELLOW. We deliberately omit it: it's not actionable and fires
+// on excellent single-maintainer packages (zod, dayjs, chalk…), creating exactly
+// the alert fatigue the research warns against. Revisit as an info-only badge.
 
 export interface ScoredPackage extends PackageFinding {
   priority: number;
@@ -57,28 +60,19 @@ export function scorePackage(
   const hasInstallScript = npm.hasInstallScript;
   const lowAdoption =
     npm.weeklyDownloads != null && npm.weeklyDownloads < LOW_DOWNLOADS;
-  const veryHighAdoption =
-    npm.weeklyDownloads != null && npm.weeklyDownloads >= VERY_HIGH_DOWNLOADS;
   const abandoned =
     npm.lastPublishIso != null &&
     monthsSince(npm.lastPublishIso, now) > ABANDON_MONTHS;
   const deprecated = !!npm.deprecated;
   const securityDeprecation =
     deprecated && /secur|vuln|critical|malicious|cve/i.test(npm.deprecated ?? "");
-  const busFactor = npm.maintainers === 1 && veryHighAdoption;
   const scriptObscurity = hasInstallScript && lowAdoption;
 
   // ---- status ----
   let status: RiskStatus = "healthy";
   if (worstVulnRank >= 3 || isTyposquat || securityDeprecation) {
     status = "critical";
-  } else if (
-    vulns.length > 0 ||
-    abandoned ||
-    deprecated ||
-    scriptObscurity ||
-    busFactor
-  ) {
+  } else if (vulns.length > 0 || abandoned || deprecated || scriptObscurity) {
     status = "warning";
   }
 
@@ -98,7 +92,6 @@ export function scorePackage(
     else if (deprecated) tags.push("DEPRECATED");
     else if (abandoned) tags.push("UNMAINTAINED");
     else if (scriptObscurity) tags.push("INSTALL-SCRIPT");
-    else if (busFactor) tags.push("BUS-FACTOR");
   }
   if (status === "healthy") tags.push("✓ HEALTHY");
 
@@ -117,8 +110,6 @@ export function scorePackage(
     description = `No release in over ${Math.round(monthsSince(npm.lastPublishIso, now))} months — the project appears unmaintained and won't receive fixes.`;
   } else if (vulns.length === 0 && scriptObscurity) {
     description = `Runs a ${npm.installHooks.join("/") || "install"} script on install and has low adoption (${humanizeDownloads(npm.weeklyDownloads)}/wk). Install-script + obscurity is a supply-chain risk worth reviewing.`;
-  } else if (vulns.length === 0 && busFactor) {
-    description = `A single maintainer publishes a package with very high adoption (${humanizeDownloads(npm.weeklyDownloads)}/wk) — an attractive supply-chain target.`;
   }
 
   // ---- right-rail summary ----
