@@ -14,6 +14,7 @@ import { detectTyposquat } from "./typosquat";
 import { scorePackage, type ScoredPackage } from "./score";
 import { enrichFlagged } from "./ai";
 import { mapLimit } from "./http";
+import { pendoTrack } from "./pendo";
 import type { OsvVuln } from "./osv";
 import type { CaughtBanner, FixCard, PackageFinding, ScanReport } from "./types";
 
@@ -114,6 +115,14 @@ export async function analyzeManifest(
       hook: hero.stats.installScript.replace(/^⚑\s*/, "") || "postinstall",
       note: "NO OTHER SCANNER FLAGGED THIS",
     };
+    const heroTypo = detectTyposquat(hero.name);
+    pendoTrack("typosquat_caught", {
+      package_name: hero.name,
+      package_version: hero.version,
+      target_package: hero.typosquatTarget ?? "unknown",
+      hook_type: caught.hook,
+      edit_distance: heroTypo?.distance ?? 0,
+    });
   }
 
   const fixes: FixCard[] = risky.slice(0, MAX_FIXES).map((p, i) => ({

@@ -1,4 +1,5 @@
 import { analyzeManifest } from "@/lib/analyze";
+import { pendoTrack } from "@/lib/pendo";
 import type { AnalyzeResponse } from "@/lib/types";
 
 export const runtime = "nodejs";
@@ -31,9 +32,24 @@ export async function POST(request: Request) {
     if (!outcome.ok) {
       return Response.json({ error: outcome.error }, { status: 400 });
     }
+    const elapsedMs = Date.now() - started;
+    const rpt = outcome.report;
+    pendoTrack("vulnerability_report_generated", {
+      total_packages: rpt.total,
+      critical_count: rpt.counts.critical,
+      warning_count: rpt.counts.warning,
+      healthy_count: rpt.counts.healthy,
+      vulnerabilities_found: rpt.packages.reduce((s, p) => s + p.vulns.length, 0),
+      typosquats_found: rpt.packages.filter((p) => p.tags.some((t) => t.includes("TYPOSQUAT"))).length,
+      has_caught_banner: !!rpt.caught,
+      fix_count: rpt.fixes.length,
+      elapsed_ms: elapsedMs,
+      has_ai_enrichment: rpt.packages.some((p) => !!p.aiNote),
+      warnings_count: rpt.warnings?.length ?? 0,
+    });
     const payload: AnalyzeResponse = {
-      report: outcome.report,
-      elapsedMs: Date.now() - started,
+      report: rpt,
+      elapsedMs,
     };
     return Response.json(payload, { status: 200 });
   } catch (e) {

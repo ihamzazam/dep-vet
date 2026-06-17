@@ -15,6 +15,10 @@ import {
 import { parseManifest } from "@/lib/parse";
 import type { AnalyzeResponse, ScanReport } from "@/lib/types";
 
+declare const pendo: {
+  track: (event: string, properties?: Record<string, string | number | boolean>) => void;
+} | undefined;
+
 type Screen = "landing" | "analyzing" | "report";
 type Source = "real" | "clean" | "broken" | "custom";
 
@@ -74,10 +78,27 @@ export default function Home() {
     async (src: Source, text: string) => {
       const parsed = parseManifest(text);
       if (!parsed.ok) {
+        if (typeof pendo !== "undefined") {
+          pendo.track("manifest_parse_failed", {
+            error_message: parsed.error.substring(0, 200),
+            input_length: text.length,
+            source: src,
+          });
+        }
         setScreen("landing");
         setError(parsed.error);
         return;
       }
+
+      if (typeof pendo !== "undefined") {
+        pendo.track("manifest_submitted", {
+          source: src,
+          dependency_count: parsed.deps.length,
+          project_name: parsed.name ?? "unknown",
+          input_length: text.length,
+        });
+      }
+
       setError(null);
 
       const total =
@@ -130,19 +151,50 @@ export default function Home() {
 
       clearTimers();
       if (result.error || !result.report) {
+        const errorMsg = result.error ?? "SCAN FAILED — please try again.";
+        if (typeof pendo !== "undefined") {
+          pendo.track("scan_failed", {
+            error_message: errorMsg.substring(0, 200),
+            source: src,
+            is_network_error: errorMsg.startsWith("NETWORK ERROR"),
+            is_timeout: errorMsg.includes("TIMED OUT"),
+          });
+        }
         setScreen("landing");
-        setError(result.error ?? "SCAN FAILED — please try again.");
+        setError(errorMsg);
         return;
       }
       setScanCount(result.report.total);
       setReport(result.report);
       setScreen("report");
+
+      if (typeof pendo !== "undefined") {
+        const rpt = result.report;
+        pendo.track("scan_completed", {
+          verdict: rpt.mode,
+          total_packages: rpt.total,
+          critical_count: rpt.counts.critical,
+          warning_count: rpt.counts.warning,
+          healthy_count: rpt.counts.healthy,
+          fix_count: rpt.fixes.length,
+          has_typosquat_caught: !!rpt.caught,
+          typosquat_package_name: rpt.caught?.name ?? "",
+          scan_duration_ms: elapsed,
+          source: src,
+          has_ai_enrichment: rpt.packages.some((p) => !!p.aiNote),
+        });
+      }
     },
     [clearTimers],
   );
 
   const loadExample = useCallback(
     (src: Exclude<Source, "custom">, text: string) => {
+      if (typeof pendo !== "undefined") {
+        pendo.track("example_loaded", {
+          example_type: src,
+        });
+      }
       setInputState(text);
       setSource(src);
       setError(null);
