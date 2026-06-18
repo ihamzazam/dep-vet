@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import { COLORS, ErrorTriangle } from "./glyphs";
 
 export interface LandingProps {
@@ -5,6 +8,7 @@ export interface LandingProps {
   onInput: (v: string) => void;
   error: string | null;
   onScan: () => void;
+  onScanRepo: (repo: string) => void;
   onLoadReal: () => void;
   onLoadClean: () => void;
   onLoadBroken: () => void;
@@ -24,10 +28,16 @@ export function Landing({
   onInput,
   error,
   onScan,
+  onScanRepo,
   onLoadReal,
   onLoadClean,
   onLoadBroken,
 }: LandingProps) {
+  const [repoInput, setRepoInput] = useState("");
+  const submitRepo = () => {
+    const v = repoInput.trim();
+    if (v) onScanRepo(v);
+  };
   return (
     <div
       className="dv-landing"
@@ -154,6 +164,53 @@ export function Landing({
               caretColor: COLORS.phosphor,
             }}
           />
+        </div>
+
+        {/* or scan a public GitHub repo by URL */}
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 12, flexWrap: "wrap" }}>
+          <span style={{ fontSize: 10, color: "#4a5a38", letterSpacing: "0.14em" }}>OR REPO:</span>
+          <input
+            value={repoInput}
+            onChange={(e) => setRepoInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                submitRepo();
+              }
+            }}
+            placeholder="github.com/owner/repo"
+            spellCheck={false}
+            aria-label="GitHub repository URL"
+            style={{
+              flex: "1 1 220px",
+              minWidth: 0,
+              background: "rgba(10,16,8,0.7)",
+              border: "1px solid rgba(184,255,92,0.22)",
+              borderRadius: 7,
+              color: "#cfe6b0",
+              fontFamily: "var(--font-jetbrains), monospace",
+              fontSize: 12,
+              padding: "10px 12px",
+              outline: "none",
+              caretColor: COLORS.phosphor,
+            }}
+          />
+          <button
+            onClick={submitRepo}
+            style={{
+              fontFamily: "var(--font-jetbrains), monospace",
+              fontSize: 12,
+              color: "#cfe6b0",
+              background: "transparent",
+              border: "1px solid rgba(184,255,92,0.3)",
+              padding: "10px 14px",
+              borderRadius: 7,
+              cursor: "pointer",
+              whiteSpace: "nowrap",
+            }}
+          >
+            scan repo →
+          </button>
         </div>
 
         {error && (

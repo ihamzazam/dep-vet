@@ -8,6 +8,8 @@ import type {
   PackageStat,
   RiskStatus,
   ScanReport,
+  TransitiveFinding,
+  TransitiveReport,
   VulnFinding,
 } from "@/lib/types";
 import { RiskGlyph, PkgName } from "./glyphs";
@@ -347,6 +349,23 @@ function FixCardView({ fix }: { fix: FixCard }) {
         <span style={{ fontSize: 10, color: danger ? "#ff8a7d" : "#ffc870", letterSpacing: "0.12em" }}>
           {fix.status.toUpperCase()} · {fix.rank}
         </span>
+        {fix.bumpKind && (
+          <span
+            title={fix.bumpKind === "safe" ? "Patch/minor — low risk" : "Major version — test before shipping"}
+            style={{
+              marginLeft: "auto",
+              fontSize: 8.5,
+              letterSpacing: "0.12em",
+              textTransform: "uppercase",
+              padding: "2px 6px",
+              borderRadius: 3,
+              color: fix.bumpKind === "safe" ? "#b8ff5c" : "#ffb020",
+              border: `1px solid ${fix.bumpKind === "safe" ? "rgba(184,255,92,0.4)" : "rgba(255,176,32,0.4)"}`,
+            }}
+          >
+            {fix.bumpKind === "safe" ? "safe bump" : "major · test"}
+          </span>
+        )}
       </div>
       <a
         href={npmUrl(fix.name)}
@@ -368,6 +387,133 @@ function FixCardView({ fix }: { fix: FixCard }) {
         {fix.reason}
       </div>
       <ActionPill action={fix.action} block />
+    </div>
+  );
+}
+
+/** One-sentence bottom line shown directly under the verdict bar. */
+function VerdictLineStrip({ text, mode }: { text?: string; mode: ScanReport["mode"] }) {
+  if (!text) return null;
+  return (
+    <div
+      style={{
+        padding: "12px 30px",
+        borderBottom: "1px solid rgba(184,255,92,0.1)",
+        background: "rgba(184,255,92,0.02)",
+        fontSize: 13,
+        lineHeight: 1.5,
+        color: mode === "healthy" ? "#cfe6b0" : "#e9dcc6",
+      }}
+    >
+      <span style={{ color: "#6f8a4a", letterSpacing: "0.16em", fontSize: 10, marginRight: 10 }}>
+        ▸ BOTTOM LINE
+      </span>
+      {text}
+    </div>
+  );
+}
+
+function TransitiveRow({ f }: { f: TransitiveFinding }) {
+  const status: RiskStatus = f.severityLabel === "CRITICAL" ? "critical" : "warning";
+  const accent = status === "critical" ? "#ff8a7d" : "#ffc870";
+  return (
+    <div
+      style={{
+        display: "flex",
+        alignItems: "flex-start",
+        gap: 12,
+        padding: "11px 14px",
+        borderBottom: "1px solid rgba(184,255,92,0.07)",
+      }}
+    >
+      <RiskGlyph status={status} style={{ marginTop: 4 }} />
+      <div style={{ minWidth: 0, flex: 1 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+          <span style={{ fontSize: 13, fontWeight: 600, color: status === "critical" ? "#ffd2cb" : "#f4d49a" }}>
+            <a href={npmUrl(f.name)} target="_blank" rel="noopener noreferrer" style={{ ...SRC_LINK, color: "inherit" }}>
+              {f.name}@{f.version}
+            </a>
+          </span>
+          <a
+            href={advisoryUrl(f.id)}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ ...SRC_LINK, fontSize: 11, color: accent }}
+          >
+            {f.id} ↗
+          </a>
+          <span style={{ fontSize: 10, color: accent, letterSpacing: "0.1em" }}>
+            {f.severityLabel}
+            {f.score != null ? ` (${f.score})` : ""}
+          </span>
+        </div>
+        <div style={{ fontSize: 11.5, color: "#bfae8f", lineHeight: 1.5, marginTop: 3 }}>{f.summary}</div>
+        <div style={{ fontSize: 10, color: "#6f8a4a", marginTop: 4 }}>
+          pulled in via{" "}
+          {f.via.map((v, i) => (
+            <span key={v}>
+              <span style={{ color: "#8aa06a" }}>{v}</span>
+              {i < f.via.length - 1 ? ", " : ""}
+            </span>
+          ))}
+          {f.fixedVersion ? ` · fixed in ${f.name}@${f.fixedVersion}` : ""}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/** Transitive (indirect) dependency risk — ranked, HIGH/CRITICAL only. */
+function TransitiveSection({ transitive }: { transitive?: TransitiveReport }) {
+  if (!transitive || transitive.scanned === 0) return null;
+  const flagged = transitive.flagged;
+  return (
+    <div style={{ marginBottom: 32 }}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          marginBottom: 10,
+          flexWrap: "wrap",
+          gap: 6,
+        }}
+      >
+        <span style={{ fontSize: 10, letterSpacing: "0.22em", color: flagged.length ? "#ffb020" : "#6f8a4a", textTransform: "uppercase" }}>
+          ▸ Transitive risk — {flagged.length} flagged
+        </span>
+        <span style={{ fontSize: 10, color: "#4a5a38", letterSpacing: "0.1em" }}>
+          {transitive.scanned} indirect deps scanned · deps.dev
+        </span>
+      </div>
+      {flagged.length === 0 ? (
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 10,
+            padding: "12px 14px",
+            border: "1px solid rgba(184,255,92,0.14)",
+            borderRadius: 9,
+            color: "#8aa06a",
+            fontSize: 12,
+          }}
+        >
+          <RiskGlyph status="healthy" />
+          {transitive.scanned} transitive dependencies scanned — none high or critical.
+        </div>
+      ) : (
+        <div style={{ border: "1px solid rgba(255,176,32,0.22)", borderRadius: 9, overflow: "hidden" }}>
+          {flagged.slice(0, 8).map((f) => (
+            <TransitiveRow key={`${f.name}@${f.version}`} f={f} />
+          ))}
+          {flagged.length > 8 && (
+            <div style={{ padding: "11px 14px", fontSize: 12, color: "#6f8a4a" }}>
+              + {flagged.length - 8} more transitive findings
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
@@ -504,6 +650,8 @@ function MixedReport({
         </div>
       </div>
 
+      <VerdictLineStrip text={report.verdictLine} mode="mixed" />
+
       {/* caught banner */}
       {report.caught && (
         <div
@@ -608,6 +756,8 @@ function MixedReport({
               </div>
             </>
           )}
+
+          <TransitiveSection transitive={report.transitive} />
 
           <div
             style={{
@@ -911,6 +1061,8 @@ function HealthyReport({
         </div>
       </div>
 
+      <VerdictLineStrip text={report.verdictLine} mode="healthy" />
+
       {/* body */}
       <div
         className="dv-report-body"
@@ -1053,6 +1205,12 @@ function HealthyReport({
             packages, no typosquats, no install-time scripts. This manifest is safe to install.
           </p>
           <ExportToolbar report={report} shareUrl={shareUrl} />
+          {report.transitive && report.transitive.scanned > 0 && (
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 22, fontSize: 11.5, color: "#8aa06a" }}>
+              <RiskGlyph status="healthy" size={9} />
+              {report.transitive.scanned} transitive dependencies also scanned — none high or critical.
+            </div>
+          )}
           <div
             style={{
               display: "grid",

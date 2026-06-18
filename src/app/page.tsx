@@ -17,7 +17,7 @@ import { encodeManifest, decodeManifest } from "@/lib/share";
 import type { AnalyzeResponse, ScanReport } from "@/lib/types";
 
 type Screen = "landing" | "analyzing" | "report";
-type Source = "real" | "clean" | "broken" | "custom";
+type Source = "real" | "clean" | "broken" | "custom" | "repo";
 
 const PHASES = [
   "ESTABLISHING DEPENDENCY TREE",
@@ -33,6 +33,7 @@ export default function Home() {
   const [screen, setScreen] = useState<Screen>("landing");
   const [input, setInputState] = useState("");
   const [source, setSource] = useState<Source>("custom");
+  const [repoValue, setRepoValue] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [report, setReport] = useState<ScanReport | null>(null);
 
@@ -69,20 +70,24 @@ export default function Home() {
     setScanPhase(0);
     setScanCount(0);
     setError(null);
+    setSource("custom");
+    setRepoValue("");
   }, [clearTimers]);
 
   const startScan = useCallback(
-    async (src: Source, text: string) => {
-      const parsed = parseManifest(text);
-      if (!parsed.ok) {
-        setScreen("landing");
-        setError(parsed.error);
-        return;
+    async (src: Source, value: string) => {
+      const isRepo = src === "repo";
+      let total = 40; // repo: unknown until the server resolves the manifest
+      if (!isRepo) {
+        const parsed = parseManifest(value);
+        if (!parsed.ok) {
+          setScreen("landing");
+          setError(parsed.error);
+          return;
+        }
+        total = src === "real" ? 46 : src === "clean" ? 38 : parsed.deps.length;
       }
       setError(null);
-
-      const total =
-        src === "real" ? 46 : src === "clean" ? 38 : parsed.deps.length;
 
       const myRun = ++runId.current;
       clearTimers();
@@ -110,7 +115,7 @@ export default function Home() {
           const res = await fetch("/api/analyze", {
             method: "POST",
             headers: { "content-type": "application/json" },
-            body: JSON.stringify({ manifest: text }),
+            body: JSON.stringify(isRepo ? { repo: value } : { manifest: value }),
           });
           const json = (await res.json()) as AnalyzeResponse & { error?: string };
           result = res.ok
@@ -135,6 +140,7 @@ export default function Home() {
         setError(result.error ?? "SCAN FAILED — please try again.");
         return;
       }
+      setScanTotal(result.report.total);
       setScanCount(result.report.total);
       setReport(result.report);
       setScreen("report");
@@ -166,6 +172,13 @@ export default function Home() {
         if (k === "real") loadExample("real", EXAMPLE_REAL);
         else if (k === "clean") loadExample("clean", EXAMPLE_CLEAN);
         else if (k === "broken") loadExample("broken", EXAMPLE_BROKEN);
+      } else if (h.startsWith("#repo=")) {
+        const r = decodeURIComponent(h.slice(6));
+        if (r) {
+          setSource("repo");
+          setRepoValue(r);
+          void startScan("repo", r);
+        }
       } else if (h.startsWith("#s=")) {
         const m = decodeManifest(h.slice(3));
         if (m) {
@@ -183,7 +196,9 @@ export default function Home() {
   let shareUrl: string | null = null;
   if (screen === "report" && typeof window !== "undefined") {
     const base = `${window.location.origin}${window.location.pathname}`;
-    if (source === "real" || source === "clean") {
+    if (source === "repo") {
+      shareUrl = repoValue ? `${base}#repo=${encodeURIComponent(repoValue)}` : null;
+    } else if (source === "real" || source === "clean") {
       shareUrl = `${base}#ex=${source}`;
     } else {
       const enc = encodeManifest(input);
@@ -210,7 +225,14 @@ export default function Home() {
           input={input}
           onInput={setInput}
           error={error}
-          onScan={() => startScan(source, input)}
+          onScan={() =>
+            startScan(source === "real" || source === "clean" ? source : "custom", input)
+          }
+          onScanRepo={(repo) => {
+            setSource("repo");
+            setRepoValue(repo);
+            void startScan("repo", repo);
+          }}
           onLoadReal={() => loadExample("real", EXAMPLE_REAL)}
           onLoadClean={() => loadExample("clean", EXAMPLE_CLEAN)}
           onLoadBroken={() => loadExample("broken", EXAMPLE_BROKEN)}

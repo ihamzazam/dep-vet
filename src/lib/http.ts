@@ -92,8 +92,50 @@ export async function fetchJson<T>(
   throw lastErr instanceof Error ? lastErr : new Error(String(lastErr));
 }
 
+/** Fetch plain text with timeout. Returns null on 404; throws on other errors. */
+export async function fetchText(
+  url: string,
+  opts: { timeoutMs?: number; signal?: AbortSignal } = {},
+): Promise<string | null> {
+  const ctrl = new AbortController();
+  const timeout = setTimeout(() => ctrl.abort(), opts.timeoutMs ?? 7000);
+  if (opts.signal) {
+    if (opts.signal.aborted) ctrl.abort();
+    else opts.signal.addEventListener("abort", () => ctrl.abort(), { once: true });
+  }
+  try {
+    const res = await fetch(url, {
+      headers: { "user-agent": USER_AGENT, accept: "text/plain, */*" },
+      signal: ctrl.signal,
+      cache: "no-store",
+    });
+    if (res.status === 404) return null;
+    if (!res.ok) throw new HttpError(`HTTP ${res.status} for ${url}`, res.status);
+    return await res.text();
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
 export function sleep(ms: number): Promise<void> {
   return new Promise((r) => setTimeout(r, ms));
+}
+
+/** Resolve `promise`, but fall back to `fallback` if it rejects or exceeds `ms`. */
+export async function withTimeout<T>(
+  promise: Promise<T>,
+  ms: number,
+  fallback: T,
+): Promise<T> {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const timeoutP = new Promise<T>((resolve) => {
+    timer = setTimeout(() => resolve(fallback), ms);
+  });
+  try {
+    return await Promise.race([promise.catch(() => fallback), timeoutP]);
+  } finally {
+    if (timer) clearTimeout(timer);
+  }
 }
 
 /** Run `fn` over `items` with at most `limit` in flight; preserves order. */

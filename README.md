@@ -1,10 +1,12 @@
 # DepVet — supply-chain scanner
 
-Paste your `package.json` and instantly see which dependencies are dangerous.
-Every package is cross-checked against **live vulnerability data (OSV)** plus
-**abandonment, typosquat, and malicious install-script** signals, then scored
-red / yellow / green with one verdict and a prioritized "fix these first" list.
-No signup. Nothing about your manifest is stored.
+Paste your `package.json` — or a **public GitHub repo URL** — and instantly see
+which dependencies are dangerous. Every package is cross-checked against **live
+vulnerability data (OSV)** plus **abandonment, typosquat, and malicious
+install-script** signals, with **transitive (indirect) dependencies** resolved
+via deps.dev so you see what `npm install` actually pulls in. Scored red /
+yellow / green with one verdict, a plain-English bottom line, and a prioritized
+"fix these first" list. No signup. Nothing about your manifest is stored.
 
 Built for the Mind the Product **World Product Day 2026 — "Everyone Ships Now"**
 hackathon (submission deadline **2026-06-20 17:00 BST**).
@@ -40,6 +42,22 @@ severity is a raw **CVSS vector** we parse and bucket ourselves, npm
 install-script intent comes from the resolved version's scripts, and all
 outbound calls are timeout- + 429-aware with a descriptive User-Agent.
 
+## Use it in CI (no signup, no install)
+
+`POST /api/analyze` returns the full report as JSON, so you can gate a build on
+critical findings with one line — no account, no GitHub App:
+
+```bash
+curl -s -X POST https://<your-deployment>/api/analyze \
+  -H 'content-type: application/json' \
+  --data "{\"manifest\": $(jq -Rs . < package.json)}" \
+  | jq -e '.report.counts.critical == 0' > /dev/null \
+  || { echo "DepVet: critical dependency risk found"; exit 1; }
+```
+
+Or scan a repo directly: `--data '{"repo":"owner/repo"}'`. (Responses are
+cached by manifest hash and rate-limited per IP.)
+
 ## Develop
 
 ```bash
@@ -69,12 +87,18 @@ it never blocks on the AI.
 
 ## Status
 
-Day 1 + Day 2 complete: scaffold + full design (landing / scan reveal /
-report-mixed / all-clear / error), real `/api/analyze`, and the **AI synthesis
-layer** (provider-agnostic — any OpenAI-compatible API, synthesis-only, fails
-open). The AI fills the "Neutralize first" reasons and the per-package "in plain
-english" block; the CVE IDs, CVSS scores, and stats above it stay deterministic
-— real data, AI only explains. See `docs/DepVet-Claude-Code-Handoff.md`.
+Days 1–3 complete: scaffold + full design (landing / scan reveal / report /
+all-clear / error), real `/api/analyze`, the **AI synthesis layer** (provider-
+agnostic, synthesis-only, fails open), and the "make it real" set:
+- **Scan a GitHub repo by URL** (server fetches the manifest, keyless).
+- **Transitive depth** via deps.dev — HIGH/CRITICAL indirect findings rolled
+  under a "via &lt;direct dep&gt;" provenance chip, ranked not flooded (fail-open lane).
+- **Bottom-line verdict sentence**, **safe vs major** upgrade tagging.
+- Copy fixes / Markdown / shareable links, source links, show-all, drag-drop,
+  result cache + per-IP rate limit, and the CI one-liner above.
+
+Every external lane (repo fetch, transitive, AI) is bounded and fails open to
+the deterministic direct-scan report. See `docs/DepVet-Claude-Code-Handoff.md`.
 
 > Results are based on public data (OSV, npm registry) and are not a substitute
 > for a full security audit.

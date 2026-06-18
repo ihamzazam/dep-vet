@@ -19,7 +19,7 @@ import type { NpmPackageData } from "./npm";
 import type { OsvVuln } from "./osv";
 import type { TyposquatHit } from "./typosquat";
 import { compactDownloads, humanizeDownloads, monthsSince, relativeTime } from "./format";
-import { gt as semverGt } from "semver";
+import { gt as semverGt, diff as semverDiff } from "semver";
 
 const LOW_DOWNLOADS = 50_000;
 const ABANDON_MONTHS = 24;
@@ -35,6 +35,19 @@ export interface ScoredPackage extends PackageFinding {
   hasInstallScript: boolean;
   fixReason: string;
   fixAction: ActionChip;
+  /** Upgrade risk for the recommended bump: "safe" (patch/minor) vs "major". */
+  bumpKind?: "safe" | "major";
+}
+
+/** Classify an upgrade from→to as a safe (patch/minor) or a major bump. */
+function classifyBump(from: string, to: string): "safe" | "major" | undefined {
+  try {
+    const d = semverDiff(from, to);
+    if (!d) return "safe";
+    return d.includes("major") ? "major" : "safe";
+  } catch {
+    return undefined;
+  }
 }
 
 const SEVERITY_RANK: Record<string, number> = {
@@ -137,6 +150,7 @@ export function scorePackage(
     }, null);
   let action: ActionChip;
   let fixReason: string;
+  let bumpKind: "safe" | "major" | undefined;
   if (isTyposquat || securityDeprecation) {
     action = {
       label: "Remove from dependencies",
@@ -156,6 +170,7 @@ export function scorePackage(
     fixReason = worstVuln
       ? `${worstVuln.id} (${worstVuln.severityLabel}). Patched in ${fixedVersion}.`
       : `Patched in ${fixedVersion}.`;
+    bumpKind = classifyBump(version, fixedVersion);
   } else if (npm.latest && npm.latest !== version) {
     action = {
       label: `npm i ${dep.name}@${npm.latest}`,
@@ -168,6 +183,7 @@ export function scorePackage(
       : worstVuln
         ? `${worstVuln.id} (${worstVuln.severityLabel}).`
         : "Update available.";
+    bumpKind = classifyBump(version, npm.latest);
   } else {
     action = { label: "review", style: status === "critical" ? "danger" : "warn" };
     fixReason = worstVuln
@@ -209,6 +225,7 @@ export function scorePackage(
     hasInstallScript,
     fixReason,
     fixAction: action,
+    bumpKind,
   };
 }
 

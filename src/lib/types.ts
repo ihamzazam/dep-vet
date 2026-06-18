@@ -67,6 +67,28 @@ export interface FixCard {
   version: string;
   reason: string;
   action: ActionChip;
+  /** Upgrade risk: "safe" (patch/minor) vs "major" (test first). Absent for removes. */
+  bumpKind?: "safe" | "major";
+}
+
+/** A HIGH/CRITICAL vulnerability found in a transitive (indirect) dependency. */
+export interface TransitiveFinding {
+  name: string;
+  version: string;
+  /** The direct dependencies that pull this transitive package in. */
+  via: string[];
+  id: string; // CVE / GHSA
+  severityLabel: SeverityLabel;
+  score: number | null;
+  summary: string;
+  fixedVersion: string | null;
+}
+
+export interface TransitiveReport {
+  /** How many distinct transitive packages were resolved + scanned. */
+  scanned: number;
+  /** HIGH/CRITICAL transitive findings only (ranked worst-first). */
+  flagged: TransitiveFinding[];
 }
 
 export interface CaughtBanner {
@@ -83,6 +105,10 @@ export interface ScanReport {
   mode: "mixed" | "healthy";
   total: number;
   counts: { critical: number; warning: number; healthy: number };
+  /** One-sentence bottom line (AI when on, deterministic fallback otherwise). */
+  verdictLine?: string;
+  /** Transitive (indirect) dependency findings, when the deps.dev lane ran. */
+  transitive?: TransitiveReport;
   caught?: CaughtBanner | null;
   fixes: FixCard[];
   /** Risky packages first, then a sample of healthy ones (default-visible). */

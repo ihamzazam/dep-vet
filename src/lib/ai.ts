@@ -25,6 +25,7 @@ import type { PackageFinding } from "./types";
 const MAX_FLAGGED = 12; // bound tokens — never send the whole tree
 
 const Findings = z.object({
+  verdictLine: z.string(),
   topPriorities: z.array(
     z.object({
       package: z.string(),
@@ -42,17 +43,28 @@ Rules:
 - Be specific and factual; reference CVE IDs and versions when given. Do not be alarmist; no emoji.
 - "topPriorities" lists the most urgent items first. Each: "package" (the EXACT name from the input), "oneLineReason" (one calm sentence — what is wrong and why it matters), "concreteAction" (a specific imperative such as "Upgrade to 4.17.21", "Remove from dependencies", or "Replace with dayjs" — use the fix version from the data when present).
 - "perPackageNotes": for each flagged package, one short plain-English sentence explaining its finding to a developer.
+- "verdictLine": ONE calm sentence the developer reads first — the bottom line and what to do first (e.g. "Action required: remove the colorz typosquat, then two one-line upgrades clear the rest."). Use the provided summary counts; if anything is in transitive dependencies, mention it. If nothing is wrong, affirm it's safe to install.
 
 Respond with ONLY a JSON object of exactly this shape (no markdown, no code fences, no prose):
-{"topPriorities":[{"package":"string","oneLineReason":"string","concreteAction":"string"}],"perPackageNotes":[{"package":"string","note":"string"}]}`;
+{"verdictLine":"string","topPriorities":[{"package":"string","oneLineReason":"string","concreteAction":"string"}],"perPackageNotes":[{"package":"string","note":"string"}]}`;
+
+export interface AiSummary {
+  critical: number;
+  warning: number;
+  healthy: number;
+  total: number;
+  transitiveFlagged: number;
+}
 
 export interface AiEnrichment {
+  verdictLine: string;
   priorities: Map<string, string>; // package name -> oneLineReason
   notes: Map<string, string>; // package name -> plain-english note
 }
 
 export async function enrichFlagged(
   flagged: PackageFinding[],
+  summary?: AiSummary,
   signal?: AbortSignal,
 ): Promise<AiEnrichment | null> {
   const apiKey = process.env.AI_API_KEY;
@@ -64,7 +76,7 @@ export async function enrichFlagged(
 
   try {
     const client = new OpenAI({ apiKey, baseURL, timeout: 15_000, maxRetries: 1 });
-    const input = { flagged: flagged.slice(0, MAX_FLAGGED).map(toInput) };
+    const input = { summary, flagged: flagged.slice(0, MAX_FLAGGED).map(toInput) };
 
     const res = await client.chat.completions.create(
       {
@@ -93,7 +105,7 @@ export async function enrichFlagged(
     for (const n of parsed.data.perPackageNotes) {
       if (n.package && n.note) notes.set(n.package, n.note);
     }
-    return { priorities, notes };
+    return { verdictLine: parsed.data.verdictLine, priorities, notes };
   } catch {
     return null; // fail open
   }

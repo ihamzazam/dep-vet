@@ -1,4 +1,5 @@
 import { analyzeManifest } from "@/lib/analyze";
+import { fetchRepoManifest } from "@/lib/github";
 import { getCachedReport, setCachedReport, manifestKey } from "@/lib/cache";
 import { rateLimit, clientIp } from "@/lib/ratelimit";
 import type { AnalyzeResponse } from "@/lib/types";
@@ -32,26 +33,31 @@ export async function POST(request: Request) {
     );
   }
 
-  const manifest =
-    body && typeof body === "object" && "manifest" in body
-      ? String((body as { manifest: unknown }).manifest ?? "")
-      : "";
-
-  // 2. cache: identical manifests (the demo, judges, retries) return instantly
-  const key = manifestKey(manifest);
-  const cached = getCachedReport(key);
-  if (cached) {
-    const payload: AnalyzeResponse = { report: cached, elapsedMs: 0 };
-    return Response.json(payload, {
-      status: 200,
-      headers: { "x-depvet-cache": "hit" },
-    });
-  }
+  const obj = body && typeof body === "object" ? (body as Record<string, unknown>) : {};
+  let manifest = typeof obj.manifest === "string" ? obj.manifest : "";
+  const repo = typeof obj.repo === "string" ? obj.repo.trim() : "";
 
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), OVERALL_TIMEOUT_MS);
   const started = Date.now();
   try {
+    // 2. repo mode: fetch the manifest from GitHub, then analyze it like a paste
+    if (repo) {
+      const fetched = await fetchRepoManifest(repo, ctrl.signal);
+      if (!fetched.ok) {
+        return Response.json({ error: fetched.error }, { status: 400 });
+      }
+      manifest = fetched.manifest;
+    }
+
+    // 3. cache: identical manifests (the demo, judges, retries) return instantly
+    const key = manifestKey(manifest);
+    const cached = getCachedReport(key);
+    if (cached) {
+      const payload: AnalyzeResponse = { report: cached, elapsedMs: 0 };
+      return Response.json(payload, { status: 200, headers: { "x-depvet-cache": "hit" } });
+    }
+
     const outcome = await analyzeManifest(manifest, ctrl.signal);
     if (!outcome.ok) {
       return Response.json({ error: outcome.error }, { status: 400 });
@@ -61,10 +67,7 @@ export async function POST(request: Request) {
       report: outcome.report,
       elapsedMs: Date.now() - started,
     };
-    return Response.json(payload, {
-      status: 200,
-      headers: { "x-depvet-cache": "miss" },
-    });
+    return Response.json(payload, { status: 200, headers: { "x-depvet-cache": "miss" } });
   } catch (e) {
     const aborted = e instanceof Error && e.name === "AbortError";
     return Response.json(

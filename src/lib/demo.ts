@@ -48,6 +48,34 @@ export const DEMO_MIXED: ScanReport = {
   mode: "mixed",
   total: 46,
   counts: { critical: 3, warning: 2, healthy: 41 },
+  verdictLine:
+    "Action required — 3 critical and 2 warnings, plus 2 high-severity issues in transitive dependencies. Start by removing the colorz typosquat, then two one-line upgrades clear the rest.",
+  transitive: {
+    scanned: 39,
+    flagged: [
+      {
+        name: "ip",
+        version: "1.1.5",
+        via: ["axios"],
+        id: "CVE-2023-42282",
+        severityLabel: "HIGH",
+        score: 8.1,
+        summary:
+          "SSRF — improper categorization of an IP address as private allows server-side request forgery.",
+        fixedVersion: "2.0.1",
+      },
+      {
+        name: "semver",
+        version: "5.7.1",
+        via: ["minimist", "moment"],
+        id: "CVE-2022-25883",
+        severityLabel: "HIGH",
+        score: 7.5,
+        summary: "ReDoS in the range parser via a crafted version string.",
+        fixedVersion: "7.5.2",
+      },
+    ],
+  },
   caught: {
     name: "colorz",
     version: "1.4.0",
@@ -71,6 +99,7 @@ export const DEMO_MIXED: ScanReport = {
       version: "4.17.11",
       reason: "Prototype pollution, CVE-2019-10744. Patched upstream.",
       action: { label: "↑ upgrade → 4.17.21", style: "safe", mono: true, command: "npm i lodash@4.17.21" },
+      bumpKind: "safe",
     },
     {
       rank: "03",
@@ -79,6 +108,7 @@ export const DEMO_MIXED: ScanReport = {
       version: "1.2.0",
       reason: "Argument injection, CVE-2021-44906. Low-effort fix.",
       action: { label: "↑ upgrade → 1.2.8", style: "safe", mono: true, command: "npm i minimist@1.2.8" },
+      bumpKind: "safe",
     },
   ],
   packages: [
@@ -237,6 +267,9 @@ export const DEMO_HEALTHY: ScanReport = {
   mode: "healthy",
   total: 38,
   counts: { critical: 0, warning: 0, healthy: 38 },
+  verdictLine:
+    "All clear — 38 dependencies and their transitive tree check out. Safe to install.",
+  transitive: { scanned: 31, flagged: [] },
   caught: null,
   fixes: [],
   packages: [],
