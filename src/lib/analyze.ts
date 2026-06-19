@@ -14,7 +14,7 @@ import { fetchNpmPackage, type NpmPackageData } from "./npm";
 import { queryOsv, type OsvVuln } from "./osv";
 import { detectTyposquat } from "./typosquat";
 import { scorePackage, type ScoredPackage } from "./score";
-import { enrichFlagged, type AiSummary } from "./ai";
+import { enrichFlagged, type AiSummary, type AiEnrichment } from "./ai";
 import { fetchTransitiveNodes } from "./depsdev";
 import { mapLimit, withTimeout } from "./http";
 import type {
@@ -42,8 +42,11 @@ export type AnalyzeOutcome =
 
 export async function analyzeManifest(
   text: string,
-  signal?: AbortSignal,
+  opts: { signal?: AbortSignal; ai?: boolean } = {},
 ): Promise<AnalyzeOutcome> {
+  // `ai` defaults on for POST /api/analyze; the crawlable /pkg path passes
+  // ai:false so bots can't run up the paid AI bill.
+  const { signal, ai = true } = opts;
   const parsed = parseManifest(text);
   if (!parsed.ok) return { ok: false, error: parsed.error };
   const deps = parsed.deps;
@@ -122,7 +125,9 @@ export async function analyzeManifest(
       T_TIMEOUT_MS,
       undefined,
     ),
-    enrichFlagged(risky, aiSummary, signal),
+    ai
+      ? withTimeout<AiEnrichment | null>(enrichFlagged(risky, aiSummary, signal), 12_000, null)
+      : Promise.resolve<AiEnrichment | null>(null),
   ]);
 
   const transitiveFlagged = transitive?.flagged.length ?? 0;
@@ -213,9 +218,14 @@ async function runTransitiveLane(
   });
   if (nodes.size === 0) return undefined;
 
-  // one entry per name for the OSV query (OSV results are keyed by name)
+  // one entry per name for the OSV query (OSV results are keyed by name).
+  // Merge "via" across versions so provenance isn't dropped for a dup-named dep.
   const byName = new Map<string, { name: string; version: string; via: Set<string> }>();
-  for (const e of nodes.values()) if (!byName.has(e.name)) byName.set(e.name, e);
+  for (const e of nodes.values()) {
+    const prev = byName.get(e.name);
+    if (prev) for (const v of e.via) prev.via.add(v);
+    else byName.set(e.name, e);
+  }
 
   let tOsv = new Map<string, OsvVuln[]>();
   try {

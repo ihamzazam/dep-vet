@@ -173,7 +173,13 @@ function PackageRow({ pkg, defaultOpen }: { pkg: PackageFinding; defaultOpen?: b
       style={{ borderBottom: "1px solid rgba(184,255,92,0.08)" }}
     >
       <summary
-        style={{ display: "flex", alignItems: "center", gap: 14, padding: "13px 16px" }}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 14,
+          padding: "13px 16px",
+          flexWrap: "wrap",
+        }}
       >
         <RiskGlyph status={pkg.status} />
         <span
@@ -518,6 +524,17 @@ export function TransitiveSection({ transitive }: { transitive?: TransitiveRepor
   );
 }
 
+/** "What we checked" provenance line — real data, here's where it comes from. */
+function DataSources() {
+  return (
+    <div style={{ fontSize: 10, color: "#4a5a38", letterSpacing: "0.04em", lineHeight: 1.7 }}>
+      Checked against OSV (vulnerabilities) · the npm registry (maintenance, install
+      scripts) · deps.dev (transitive graph). Based on public data; not a substitute for a
+      full security audit.
+    </div>
+  );
+}
+
 /* ----------------------------- top level ----------------------------- */
 
 export function Report({
@@ -835,6 +852,8 @@ function MixedReport({
               </div>
             )}
           </div>
+          <div style={{ height: 18 }} />
+          <DataSources />
           <div style={{ height: 20 }} />
         </div>
       </div>
@@ -1253,6 +1272,9 @@ function HealthyReport({
             {report.hiddenHealthy > 0 && (
               <span style={{ opacity: 0.6 }}> &nbsp; +{report.hiddenHealthy} more</span>
             )}
+          </div>
+          <div style={{ marginTop: 26 }}>
+            <DataSources />
           </div>
         </div>
       </div>

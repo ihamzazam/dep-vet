@@ -1,13 +1,16 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { headers } from "next/headers";
 import { analyzeManifest } from "@/lib/analyze";
 import { getCachedReport, setCachedReport, manifestKey } from "@/lib/cache";
+import { rateLimit } from "@/lib/ratelimit";
 import { parsePkgSlug } from "@/lib/pkg";
 import { AmbientBackground, TopBar } from "@/components/chrome";
 import { PackageVerdict } from "@/components/PackageVerdict";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+export const maxDuration = 20;
 
 type Params = { slug: string[] };
 
@@ -48,11 +51,26 @@ export default async function PkgPage({ params }: { params: Promise<Params> }) {
 
   const key = manifestKey(manifest);
   let report = getCachedReport(key);
+
+  // /pkg is a crawlable GET: serve cache freely, but gate live analysis behind a
+  // per-IP rate limit, a hard time budget, and AI-off so bots can't run up cost.
   if (!report) {
-    const outcome = await analyzeManifest(manifest);
-    if (outcome.ok) {
-      report = outcome.report;
-      setCachedReport(key, report);
+    const h = await headers();
+    const ip = h.get("x-forwarded-for")?.split(",")[0]?.trim() || h.get("x-real-ip") || "unknown";
+    if (rateLimit(ip).ok) {
+      const ctrl = new AbortController();
+      const timer = setTimeout(() => ctrl.abort(), 14_000);
+      try {
+        const outcome = await analyzeManifest(manifest, { signal: ctrl.signal, ai: false });
+        if (outcome.ok) {
+          report = outcome.report;
+          setCachedReport(key, report);
+        }
+      } catch {
+        // fail open to the "couldn't check" view
+      } finally {
+        clearTimeout(timer);
+      }
     }
   }
 

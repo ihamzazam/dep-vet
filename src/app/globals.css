@@ -240,6 +240,18 @@ details[open] .dv-chev {
   }
 }
 
+/* top bar: drop secondary labels on small screens so it never overflows */
+@media (max-width: 760px) {
+  .dv-nodata {
+    display: none !important;
+  }
+}
+@media (max-width: 520px) {
+  .dv-tagline {
+    display: none !important;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

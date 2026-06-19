@@ -53,6 +53,7 @@ export function TopBar() {
         Dep<span style={{ color: COLORS.phosphor }}>Vet</span>
       </span>
       <span
+        className="dv-tagline"
         style={{
           fontSize: 10,
           color: "#6f8a4a",

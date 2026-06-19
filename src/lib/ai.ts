@@ -24,16 +24,20 @@ import type { PackageFinding } from "./types";
 
 const MAX_FLAGGED = 12; // bound tokens — never send the whole tree
 
+// Length caps bound the AI's influence: an over-long / injected string fails
+// safeParse and falls open to the deterministic verdict (it's explanation, not data).
 const Findings = z.object({
-  verdictLine: z.string(),
+  verdictLine: z.string().trim().max(240),
   topPriorities: z.array(
     z.object({
-      package: z.string(),
-      oneLineReason: z.string(),
-      concreteAction: z.string(),
+      package: z.string().trim().max(120),
+      oneLineReason: z.string().trim().max(220),
+      concreteAction: z.string().trim().max(120),
     }),
   ),
-  perPackageNotes: z.array(z.object({ package: z.string(), note: z.string() })),
+  perPackageNotes: z.array(
+    z.object({ package: z.string().trim().max(120), note: z.string().trim().max(220) }),
+  ),
 });
 
 const SYSTEM = `You are the synthesis layer of DepVet, a dependency-security scanner. You are given pre-computed, factual findings about a developer's npm dependencies (vulnerabilities with CVE IDs and CVSS scores, abandonment, typosquats, install scripts, weekly downloads, maintainer counts). Your ONLY job is to explain and prioritize these findings in calm, precise, plain English a senior engineer will trust on sight.

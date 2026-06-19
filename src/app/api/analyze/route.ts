@@ -58,7 +58,7 @@ export async function POST(request: Request) {
       return Response.json(payload, { status: 200, headers: { "x-depvet-cache": "hit" } });
     }
 
-    const outcome = await analyzeManifest(manifest, ctrl.signal);
+    const outcome = await analyzeManifest(manifest, { signal: ctrl.signal });
     if (!outcome.ok) {
       return Response.json({ error: outcome.error }, { status: 400 });
     }
