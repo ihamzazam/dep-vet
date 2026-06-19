@@ -1,7 +1,8 @@
 # DepVet — supply-chain scanner
 
-Paste your `package.json` — or a **public GitHub repo URL** — and instantly see
-which dependencies are dangerous. Every package is cross-checked against **live
+Paste your `package.json` — or a **public GitHub repo URL**, or look up a
+**single package** at `/pkg/<name>` — and instantly see which dependencies are
+dangerous. Every package is cross-checked against **live
 vulnerability data (OSV)** plus **abandonment, typosquat, and malicious
 install-script** signals, with **transitive (indirect) dependencies** resolved
 via deps.dev so you see what `npm install` actually pulls in. Scored red /
@@ -91,6 +92,9 @@ Days 1–3 complete: scaffold + full design (landing / scan reveal / report /
 all-clear / error), real `/api/analyze`, the **AI synthesis layer** (provider-
 agnostic, synthesis-only, fails open), and the "make it real" set:
 - **Scan a GitHub repo by URL** (server fetches the manifest, keyless).
+- **Single-package pages** — `/pkg/<name>` (and `/pkg/<name>@<version>`, scoped
+  names supported): a shareable "is this safe to add?" verdict with a dynamic OG
+  card, the org-discovery / repeat-visit surface.
 - **Transitive depth** via deps.dev — HIGH/CRITICAL indirect findings rolled
   under a "via &lt;direct dep&gt;" provenance chip, ranked not flooded (fail-open lane).
 - **Bottom-line verdict sentence**, **safe vs major** upgrade tagging.

@@ -53,7 +53,7 @@ const nameColor = (status: RiskStatus): string =>
 const versionColor = (status: RiskStatus): string =>
   status === "critical" ? "#8a6a5a" : status === "warning" ? "#8a7a4a" : "#5d7340";
 
-function ActionPill({ action, block }: { action: ActionChip; block?: boolean }) {
+export function ActionPill({ action, block }: { action: ActionChip; block?: boolean }) {
   const bg =
     action.style === "danger" ? "#ff5a48" : action.style === "warn" ? "#ffb020" : "#b8ff5c";
   const base: CSSProperties = {
@@ -88,7 +88,7 @@ function ActionPill({ action, block }: { action: ActionChip; block?: boolean }) 
   return <div style={style}>{action.label}</div>;
 }
 
-function StatTile({ stat }: { stat: PackageStat }) {
+export function StatTile({ stat }: { stat: PackageStat }) {
   const tiles = [
     { label: "LAST PUBLISH", value: stat.lastPublish, danger: false },
     { label: "WEEKLY DL", value: stat.weeklyDownloads, danger: false },
@@ -137,7 +137,7 @@ function StatTile({ stat }: { stat: PackageStat }) {
   );
 }
 
-function VulnLine({ vuln }: { vuln: VulnFinding }) {
+export function VulnLine({ vuln }: { vuln: VulnFinding }) {
   const isWarn = vuln.severityLabel === "MODERATE" || vuln.severityLabel === "LOW";
   const accent = isWarn ? "#ffb020" : "#ff5a48";
   const idColor = isWarn ? "#f4d49a" : "#ffd2cb";
@@ -464,7 +464,7 @@ function TransitiveRow({ f }: { f: TransitiveFinding }) {
 }
 
 /** Transitive (indirect) dependency risk — ranked, HIGH/CRITICAL only. */
-function TransitiveSection({ transitive }: { transitive?: TransitiveReport }) {
+export function TransitiveSection({ transitive }: { transitive?: TransitiveReport }) {
   if (!transitive || transitive.scanned === 0) return null;
   const flagged = transitive.flagged;
   return (

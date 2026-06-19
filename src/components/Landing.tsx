@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { COLORS, ErrorTriangle } from "./glyphs";
+import { pkgHref } from "@/lib/pkg";
 
 export interface LandingProps {
   input: string;
@@ -33,10 +35,16 @@ export function Landing({
   onLoadClean,
   onLoadBroken,
 }: LandingProps) {
+  const router = useRouter();
   const [repoInput, setRepoInput] = useState("");
+  const [pkgQuery, setPkgQuery] = useState("");
   const submitRepo = () => {
     const v = repoInput.trim();
     if (v) onScanRepo(v);
+  };
+  const submitPkg = () => {
+    const v = pkgQuery.trim();
+    if (v) router.push(pkgHref(v));
   };
   return (
     <div
@@ -210,6 +218,53 @@ export function Landing({
             }}
           >
             scan repo →
+          </button>
+        </div>
+
+        {/* or check a single package — the "should I add this?" moment */}
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 10, flexWrap: "wrap" }}>
+          <span style={{ fontSize: 10, color: "#4a5a38", letterSpacing: "0.14em" }}>OR ONE PKG:</span>
+          <input
+            value={pkgQuery}
+            onChange={(e) => setPkgQuery(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                submitPkg();
+              }
+            }}
+            placeholder="lodash · @scope/name"
+            spellCheck={false}
+            aria-label="single npm package name"
+            style={{
+              flex: "1 1 200px",
+              minWidth: 0,
+              background: "rgba(10,16,8,0.7)",
+              border: "1px solid rgba(184,255,92,0.22)",
+              borderRadius: 7,
+              color: "#cfe6b0",
+              fontFamily: "var(--font-jetbrains), monospace",
+              fontSize: 12,
+              padding: "10px 12px",
+              outline: "none",
+              caretColor: COLORS.phosphor,
+            }}
+          />
+          <button
+            onClick={submitPkg}
+            style={{
+              fontFamily: "var(--font-jetbrains), monospace",
+              fontSize: 12,
+              color: "#cfe6b0",
+              background: "transparent",
+              border: "1px solid rgba(184,255,92,0.3)",
+              padding: "10px 14px",
+              borderRadius: 7,
+              cursor: "pointer",
+              whiteSpace: "nowrap",
+            }}
+          >
+            check →
           </button>
         </div>
 

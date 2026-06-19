@@ -23,6 +23,9 @@ import { gt as semverGt, diff as semverDiff } from "semver";
 
 const LOW_DOWNLOADS = 50_000;
 const ABANDON_MONTHS = 24;
+// A real typosquat is obscure; a popular package that merely *resembles* a top
+// name (e.g. "core" vs "cors") is not. Only honor a name-collision below this.
+const TYPOSQUAT_MAX_DOWNLOADS = 1_000_000;
 // NOTE: the handoff also lists a "bus-factor" rule (1 maintainer + very high
 // downloads) as YELLOW. We deliberately omit it: it's not actionable and fires
 // on excellent single-maintainer packages (zod, dayjs, chalk…), creating exactly
@@ -69,7 +72,9 @@ export function scorePackage(
   const worstVuln = vulns[0] ?? null;
   const worstVulnRank = worstVuln ? SEVERITY_RANK[worstVuln.severityLabel] : 0;
 
-  const isTyposquat = !!typo;
+  const isTyposquat =
+    !!typo &&
+    (npm.weeklyDownloads == null || npm.weeklyDownloads < TYPOSQUAT_MAX_DOWNLOADS);
   const hasInstallScript = npm.hasInstallScript;
   const lowAdoption =
     npm.weeklyDownloads != null && npm.weeklyDownloads < LOW_DOWNLOADS;

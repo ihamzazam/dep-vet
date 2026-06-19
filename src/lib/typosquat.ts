@@ -48,6 +48,9 @@ export interface TyposquatHit {
  * Identical names are never flagged. Scoped names are checked on the bare name.
  */
 export function detectTyposquat(rawName: string): TyposquatHit | null {
+  // Scoped packages live in an owned namespace; the bare-name approach produces
+  // false positives (e.g. "@babel/core" → "core" → "cors"). Skip them.
+  if (rawName.startsWith("@")) return null;
   const name = bareName(rawName).toLowerCase();
   if (name.length < 3) return null;
   if (TOP_PACKAGE_SET.has(name)) return null; // it IS a known package
